@@ -303,4 +303,151 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
  showGate();
 })();
 </script>
+
+<script>
+/* Platinum Era: Release Campaigns + Music Industry */
+(function(){
+ if(window.__peReleaseIndustry)return;window.__peReleaseIndustry=true;
+ S.releaseData=S.releaseData||{campaigns:[],nextId:1,industry:{label:null,contract:null,producer:null,rivals:[],collabs:[],awards:[],decisions:[]}};
+ var R=S.releaseData,IND=R.industry;
+ IND.rivals=IND.rivals||[];IND.collabs=IND.collabs||[];IND.awards=IND.awards||[];IND.decisions=IND.decisions||[];
+ var coverChoices=[["midnight","🌙","Midnight"],["neon","🌃","Neon"],["rose","🌹","Rose"],["gold","✨","Gold"],["street","🏙️","Street"],["ocean","🌊","Ocean"]];
+ var selectedCover="midnight",selectedKind="single",selectedSongs=[],selectedReleaseWeek=S.wk+1;
+ function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+ function money(n){return "$"+Math.round(n).toLocaleString()}
+ function rbtn(a,label,p,cls){return '<button class="btn '+(cls||"sm")+'" data-a="peRI" data-p="'+a+(p==null?"":"|"+p)+'">'+label+'</button>'}
+ function box(h,body){return '<div class="box"><h3>'+h+'</h3>'+body+'</div>'}
+ function getSong(i){return S.songs[+i]}
+ function readySongs(){return S.songs.map(function(s,i){return s.st===1?'<label class="row"><span><input type="checkbox" data-a="peSongPick" data-p="'+i+'" '+(selectedSongs.includes(i)?"checked":"")+' style="accent-color:var(--teal)"> '+esc(s.t)+' <small class="mut">quality '+s.q+'</small></span></label>':""}).join("")}
+ function cover(c){var q=coverChoices.find(function(x){return x[0]===c})||coverChoices[0];return '<div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,#'+({midnight:"262044",neon:"0b7890",rose:"b33b66",gold:"b47a22",street:"454b58",ocean:"174e8b"}[c]||"262044")+',#231a4f);display:grid;place-items:center;font-size:26px">'+q[1]+'</div>'}
+ function releaseView(){
+  var songs=S.songs.filter(function(s){return s.st===1});
+  var kind='<div class="row">'+["single","EP","album"].map(function(k){return '<button class="chip '+(selectedKind===k?"on":"")+'" data-a="peRI" data-p="kind|'+k+'">'+k+'</button>'}).join("")+'</div>';
+  var count=selectedKind==="single"?1:selectedKind==="EP"?3:8;
+  var date='<div class="row"><label class="mut">Release week</label><input type="number" min="'+(S.wk+1)+'" max="'+(S.wk+52)+'" value="'+Math.max(S.wk+1,selectedReleaseWeek)+'" id="peReleaseWeek" style="width:100px;padding:8px;border-radius:9px;background:#ffffff12;color:white;border:1px solid #ffffff30"></div>';
+  var covers='<div class="mut">Choose cover art</div><div class="row" style="flex-wrap:wrap">'+coverChoices.map(function(c){return '<button class="chip '+(selectedCover===c[0]?"on":"")+'" data-a="peRI" data-p="cover|'+c[0]+'">'+c[1]+' '+c[2]+'</button>'}).join("")+'</div>';
+  var create=box("Plan a "+selectedKind,kind+'<p class="mut">Select recorded tracks ('+count+' track'+(count>1?"s":"")+' for this format), choose a cover and schedule the release.</p>'+ (songs.length?readySongs():'<p class="mut">Record a song in Studio before planning a release.</p>')+date+covers+'<div class="row"><span class="mut">Release campaign setup</span>'+rbtn("create","Schedule release","")+'</div>');
+  var campaigns=R.campaigns.slice().reverse().map(function(c){var status=c.released?"Released":("Scheduled · Week "+c.releaseWeek);return '<div class="box"><div class="row">'+cover(c.cover)+'<div style="flex:1"><b>'+esc(c.title)+'</b><div class="mut">'+c.kind+' · '+status+'</div></div><span class="mut">'+(c.released?"#"+(c.rank||"—"):"")+'</span></div><div class="tiles"><div class="tile"><b>'+Math.round(c.streams).toLocaleString()+'</b><small>Streams</small></div><div class="tile"><b>'+Math.round(c.sales).toLocaleString()+'</b><small>Sales</small></div><div class="tile"><b>'+(c.rank?"#"+c.rank:"—")+'</b><small>Chart peak #'+(c.peak||"—")+'</small></div></div><div class="mut">Fans: '+esc(c.reaction||"Awaiting release")+' · Momentum '+Math.round(c.momentum)+'</div>'+(c.released?'<div class="row"><span class="mut">Promote this release</span>'+rbtn("promo","Campaign",""+c.id)+'</div>':'')+'</div>'}).join("");
+  return '<div class="box"><h3>Release calendar</h3><p class="mut">Schedule singles, EPs and albums. Release weeks are processed when you advance the career week.</p></div>'+create+box("Your releases",campaigns||'<p class="mut">No releases planned yet. Create your first campaign above.</p>');
+ }
+ function industryView(){
+  var labels=[["indie","Stay independent",0],["nova","Nova Records",2000],["pulse","Pulse Music Group",5000]];
+  var labelBox=box("Record labels",'<p class="mut">Labels offer an advance and marketing reach, but take a share of royalties and influence your decisions.</p>'+labels.map(function(l){var current=IND.label===l[0];return '<div class="row"><div><b>'+l[1]+'</b><div class="mut">'+(l[2]?money(l[2])+" advance · 35% royalties · campaign support":"Keep 100% ownership and control")+'</div></div>'+rbtn("label",current?"Selected":"Choose",l[0])+'</div>'}).join("")+(IND.contract?'<p class="mut">Active contract: '+esc(IND.contract.name)+' · royalty share '+IND.contract.royalty+'% · '+IND.contract.weeks+' weeks remaining</p>':''));
+  var prod=[["bedroom","Local producer",100,4],["pro","Hitmaker producer",450,10],["legend","Legendary producer",1200,18]];
+  var producerBox=box("Producers & studio sessions",'<p class="mut">Hire a producer to improve one recorded track. Select a recorded song in the list.</p>'+S.songs.map(function(s,i){return s.st===1?'<div class="row"><span>'+esc(s.t)+'</span><select id="peProdSong'+i+'" style="max-width:90px;background:#251d4c;color:white"><option value="'+i+'">Track</option></select></div>':""}).join("")+prod.map(function(p){return '<div class="row"><div><b>'+p[1]+'</b><div class="mut">'+money(p[2])+' · +'+p[3]+' quality</div></div>'+rbtn("producer", "Hire",p[0])+'</div>'}).join(""));
+  var rivals=IND.rivals.length?IND.rivals.map(function(x){return '<div class="row"><span><b>'+esc(x.name)+'</b><small class="mut"> · '+esc(x.status)+'</small></span><span class="mut">'+Math.round(x.fans).toLocaleString()+' fans</span></div>'}).join(""):'<p class="mut">Your rivals will emerge as the industry develops.</p>';
+  var collab=box("Collaborations",'<p class="mut">Team up with an artist to reach their audience and boost a recorded track.</p>'+S.songs.map(function(s,i){return s.st===1?'<div class="row"><span>'+esc(s.t)+'</span>'+rbtn("collab","Collab",i)+'</div>':""}).join("")+'<p class="mut">Available artists: Nova, Juno, Echo, Lyra</p>');
+  var awards=box("Awards & nominations",'<p class="mut">Awards season unlocks after 12 weeks. Streams, chart performance and fanbase affect nominations.</p>'+rbtn("award","Enter awards season","")+(IND.awards.length?IND.awards.map(function(a){return '<div class="row mut">'+esc(a.name)+' · '+(a.won?"Winner":"Nominee")+' · Week '+a.week+'</div>'}).join(""):""));
+  var decisions=box("Major career decisions",'<p class="mut">Make a choice that changes your career direction. Decisions are permanent.</p>'+rbtn("decision","Choose my next move","")+(IND.decisions.length?IND.decisions.slice(-4).reverse().map(function(d){return '<div class="row mut">'+esc(d)+'</div>'}).join(""):""));
+  return labelBox+producerBox+collab+box("Rival artists",rivals)+awards+decisions;
+ }
+ function refreshTabs(){
+  if(!Array.isArray(navItems))return;
+  if(!navItems.some(function(t){return t[0]==="releases"}))navItems.push(["releases","Releases","💿"],["industry","Industry","🏢"]);
+  $("nav").style.gridTemplateColumns="repeat(8,1fr)";
+ }
+ var oldRender=render;
+ render=function(){oldRender();refreshTabs();if(U.tab==="releases"||U.tab==="industry"){$("main").innerHTML=(U.tab==="releases"?releaseView():industryView())+(U.app?sheet():"");}};
+ var oldNext=A.next;
+ A.next=function(){
+  oldNext();
+  var week=S.wk+1;
+  R.campaigns.forEach(function(c){
+   if(!c.released&&c.releaseWeek<=week){
+    c.released=true;c.momentum=45+c.promo*2;c.streams=0;c.sales=0;c.rank=0;c.peak=0;c.reaction="Fans are discovering "+c.title;
+    S.news.unshift(S.name+" released "+c.kind+" “"+c.title+"”");S.buzz+=5+c.promo;
+    c.songIndices.forEach(function(i){var s=getSong(i);if(s){s.st=2;s.age=0;s.wk=0;s.tot=0;s.releaseCampaign=c.id}});
+   }
+   if(c.released){
+    var base=0;c.songIndices.forEach(function(i){var s=getSong(i);if(s)base+=Math.max(1,s.q)*12});
+    var promoBoost=1+c.promo*.12,indBoost=IND.label&&IND.label!=="indie"?1.3:1;
+    var weekly=Math.round((base+tf()*.45+S.buzz*18)*promoBoost*indBoost*(.65+Math.random()*.7)*Math.max(.12,c.momentum/100));
+    c.streams+=weekly;c.sales+=Math.round(weekly*(c.kind==="album"?.008:.004));c.momentum=Math.max(5,Math.min(150,c.momentum+(weekly>700?rnd(3,10):rnd(-12,2))));
+    c.rank=Math.max(1,Math.min(100,Math.round(100-(c.streams/Math.max(1,weekly*4))*8-c.momentum*.35+Math.random()*20)));c.peak=c.peak?Math.min(c.peak,c.rank):c.rank;
+    c.reaction=c.momentum>95?"Fans are loving it":c.momentum>60?"Positive word of mouth":c.momentum>30?"Mixed fan response":"Momentum is fading";
+    S.st.sd+=Math.round(weekly*.45);S.st.az+=Math.round(weekly*.3);S.st.pm+=Math.round(weekly*.25);
+    S.money+=Math.round(weekly*.003*(1-(IND.contract?IND.contract.royalty:0)/100));
+    c.songIndices.forEach(function(i){var s=getSong(i);if(s){s.age++;s.wk=weekly;s.tot+=weekly}});
+   }
+  });
+  if(IND.contract&&IND.contract.weeks>0){IND.contract.weeks--;if(!IND.contract.weeks){S.news.unshift(IND.contract.name+" contract has ended. You can renegotiate.")}}
+  IND.rivals.forEach(function(x){x.fans=Math.max(100,Math.round(x.fans*(.94+Math.random()*.14)));x.streams=Math.max(1000,Math.round(x.streams*(.9+Math.random()*.25)))});
+  if(S.wk>0&&S.wk%12===0){var score=tf()+R.campaigns.reduce(function(a,c){return a+c.streams/20},0),won=score>2500;IND.awards.push({name:"Platinum Era Artist Awards",week:S.wk,won:won});if(won){S.money+=1500;S.buzz+=10;S.news.unshift(S.name+" won Platinum Era Artist Award")}else S.news.unshift(S.name+" received an awards nomination");}
+  render();
+ };
+ document.addEventListener("click",function(e){
+  var t=e.target.closest('[data-a="peRI"]');if(!t)return;e.preventDefault();e.stopImmediatePropagation();
+  var parts=String(t.dataset.p||"").split("|"),a=parts[0],p=parts[1];
+  if(a==="kind"){selectedKind=p;selectedSongs=[]}
+  if(a==="cover")selectedCover=p;
+  if(a==="create"){
+   var max=selectedKind==="single"?1:selectedKind==="EP"?3:8;
+   if(selectedSongs.length!==max){toast("Select exactly "+max+" recorded track"+(max>1?"s":""));return}
+   if(selectedSongs.some(function(i){var s=getSong(i);return !s||s.st!==1})){toast("Only recorded, unreleased songs can be selected");return}
+   var title=selectedSongs.map(function(i){return getSong(i).t}).join(" / ").slice(0,60);
+   var rw=Math.max(S.wk+1,Math.min(S.wk+52,+($("peReleaseWeek").value)||S.wk+1));
+   var c={id:R.nextId++,kind:selectedKind,title:title,cover:selectedCover,songIndices:selectedSongs.slice(),releaseWeek:rw,released:false,promo:0,streams:0,sales:0,rank:0,peak:0,momentum:0,reaction:"Scheduled"};
+   R.campaigns.push(c);selectedSongs=[];selectedReleaseWeek=rw;S.news.unshift("Release planned: "+title+" · Week "+rw);toast("Release campaign scheduled");
+  }
+  if(a==="promo"){var c=R.campaigns.find(function(x){return x.id===+p});if(!c)return;var opts=[["Social push",100,1],["Radio campaign",350,3],["Playlist pitching",500,5]];var choice=prompt("Choose promotion:\n1 Social media ($100)\n2 Radio ($350)\n3 Playlists ($500)");var d=opts[+choice-1];if(!d){toast("Promotion cancelled");return}if(!spend(d[1],10))return;c.promo+=d[2];c.momentum=Math.min(150,c.momentum+10*d[2]);S.buzz+=d[2];S.news.unshift(d[0]+" campaign started for "+c.title);toast(d[0]+" campaign started")}
+  render();
+ },true);
+ document.addEventListener("change",function(e){if(e.target.matches('[data-a="peSongPick"]')){var i=+e.target.dataset.p;if(e.target.checked){if(!selectedSongs.includes(i))selectedSongs.push(i)}else selectedSongs=selectedSongs.filter(function(x){return x!==i});render()}});
+ document.addEventListener("click",function(e){
+  var t=e.target.closest('[data-a="peRI"]');if(t)return;
+  var b=e.target.closest('[data-a="peSongPick"]');if(b)return;
+  var x=e.target.closest('[data-a="peTab"]');if(!x)return;
+  e.preventDefault();e.stopImmediatePropagation();U.tab=x.dataset.p;U.app=null;render();
+ },true);
+ document.addEventListener("click",function(e){
+  var t=e.target.closest('[data-a="peRI"]');if(t)return;
+  var a=e.target.closest('[data-a]');if(!a)return;
+  var act=a.dataset.a,p=a.dataset.p;
+  if(U.tab==="releases"||U.tab==="industry"){
+   if(act==="peTab")return;
+  }
+ },false);
+ document.addEventListener("click",function(e){
+  var t=e.target.closest('[data-a="peRI"]');if(t)return;
+  var a=e.target.closest('[data-a]');if(!a)return;
+  var p=String(a.dataset.p||"").split("|");
+  if(a.dataset.a==="peTab")return;
+  if(a.dataset.a==="peRI")return;
+  if(a.dataset.a==="next")return;
+  if(a.dataset.a==="tab")return;
+ },false);
+ /* Industry actions use a dedicated prompt-driven interface, preserving the current game's compact visual style. */
+ document.addEventListener("click",function(e){
+  var a=e.target.closest('[data-a="peRI"]');if(a)return;
+  if(U.tab!=="industry")return;
+  var b=e.target.closest('[data-a]');if(!b)return;
+  var act=b.dataset.a,p=String(b.dataset.p||"").split("|")[1];
+  if(["peTab","app","close","next","tab"].includes(b.dataset.a))return;
+  if(act==="peRI")return;
+  if(act==="label"){
+   var d={indie:{name:"Independent",advance:0,royalty:0,weeks:0},nova:{name:"Nova Records",advance:2000,royalty:35,weeks:24},pulse:{name:"Pulse Music Group",advance:5000,royalty:45,weeks:36}}[p];
+   if(!d)return;if(IND.contract&&IND.contract.weeks>0){toast("Your current contract is still active");return}
+   if(p!=="indie"&&S.money<0){toast("Balance your finances first");return}
+   S.money+=d.advance;IND.label=p;IND.contract=p==="indie"?null:{name:d.name,royalty:d.royalty,weeks:d.weeks};S.news.unshift(S.name+" chose "+d.name);toast("Career direction chosen");
+  }else if(act==="producer"){
+   var d={bedroom:[100,4,"Local producer"],pro:[450,10,"Hitmaker producer"],legend:[1200,18,"Legendary producer"]}[p];
+   var idx=prompt("Enter the number of a recorded track:\n"+S.songs.map(function(s,i){return s.st===1?i+": "+s.t:""}).filter(Boolean).join("\n"));var s=getSong(idx);
+   if(!d||!s||s.st!==1){toast("Select a recorded track");return}if(!spend(d[0],10))return;s.q+=d[1];IND.producer=d[2];S.news.unshift(s.t+" produced by "+d[2]);toast("Production session complete");
+  }else if(act==="collab"){
+   var names=["Nova","Juno","Echo","Lyra"],name=pick(names),s=getSong(p);if(!s||s.st!==1){toast("Record a track first");return}if(IND.collabs.includes(s.t)){toast("Already collaborated on this track");return}s.q+=rnd(5,12);s.features.push(name);IND.collabs.push(s.t);S.buzz+=4;S.news.unshift(S.name+" collaborated with "+name+" on "+s.t);toast("Collaboration recorded with "+name);
+  }else if(act==="award"){
+   if(S.wk<12){toast("Awards unlock after 12 weeks");return}var score=tf()+ts()/50+S.peak*10,won=score>4000;IND.awards.push({name:"Independent Music Awards",week:S.wk,won:won});if(won){S.money+=2500;S.buzz+=15;toast("Award won · $2,500")}else toast("You received a nomination");S.news.unshift(S.name+(won?" won ":" was nominated for ")+"Independent Music Awards");
+  }else if(act==="decision"){
+   var n=prompt("Choose a major career move:\n1 Focus on music (skill +5, energy -15)\n2 Go mainstream (buzz +12, reputation trade-off)\n3 Protect independence (buzz +3, keep control)\n4 Take a break (energy +30, miss one week of momentum)");
+   if(n==="1"){S.skill=Math.min(100,S.skill+5);S.energy=Math.max(0,S.energy-15);IND.decisions.push("Focused on music: +5 skill")}
+   else if(n==="2"){S.buzz+=12;IND.decisions.push("Chose a mainstream push: buzz increased")}
+   else if(n==="3"){S.buzz+=3;IND.label="indie";IND.contract=null;IND.decisions.push("Protected independence and creative control")}
+   else if(n==="4"){S.energy=Math.min(100,S.energy+30);R.campaigns.forEach(function(c){if(c.released)c.momentum=Math.max(5,c.momentum-10)});IND.decisions.push("Took a break to recover")}
+   else toast("No decision made");
+  }
+  render();
+ },false);
+ refreshTabs();
+})();
+</script>
 </body></html>
