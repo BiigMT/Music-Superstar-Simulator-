@@ -541,7 +541,7 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
   return '<div class="phone-app-screen">'+appHead(a)+'<div class="phone-app-content">'+b+'</div><div class="phone-home-indicator" data-a="close"></div></div>'
  }
  var oldRender=render;
- render=function(){oldRender();if(U.tab==="phone"){$("main").innerHTML=phoneHome()+(U.app?phoneAppSheet():"");wirePhoneDrag()}};
+ render=function(){oldRender();if(U.tab==="phone"){$("main").innerHTML=U.app?phoneAppSheet():phoneHome();wirePhoneDrag()}};
  function wirePhoneDrag(){
   var main=$("main");if(!main||main.dataset.phoneDrag)return;main.dataset.phoneDrag="1";
   var source=null,startX=0,startY=0,moved=false;
@@ -552,6 +552,8 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
  var baseClick=document.addEventListener;
  document.addEventListener("click",function(e){
   var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,p=t.dataset.p;
+  if(a==="app"&&U.tab==="phone"){e.preventDefault();e.stopImmediatePropagation();U.app=p;render();return}
+  if(a==="close"&&U.tab==="phone"){e.preventDefault();e.stopImmediatePropagation();U.app=null;render();return}
   if(a==="phoneEdit"){e.preventDefault();e.stopImmediatePropagation();U.phoneEdit=!U.phoneEdit;render();return}
   if(a==="app"&&U.phoneEdit&&U.tab==="phone"){e.preventDefault();e.stopImmediatePropagation();toast("Drag apps to swap their positions");return}
   if(a==="phoneChat"){e.preventDefault();e.stopImmediatePropagation();U.phoneChat=p;render();return}
