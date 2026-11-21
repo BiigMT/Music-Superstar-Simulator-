@@ -583,4 +583,23 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
 })();
 
 </script>
+<script>
+/* Phone navigation hardening: route every app launch through the phone OS */
+(function(){
+ if(window.__pePhoneNavFix)return;window.__pePhoneNavFix=true;
+ if(typeof TABS!=="undefined"&&!TABS.some(function(t){return t[0]==="phone"})){
+   TABS.push(["phone","Phone","📱",phoneView]);
+   var navStyle=document.createElement("style");navStyle.textContent="nav{grid-template-columns:repeat(6,minmax(0,1fr))}nav button{font-size:10px}";document.head.appendChild(navStyle);
+ }
+ document.addEventListener("click",function(e){
+   var t=e.target.closest("[data-a]");
+   if(!t)return;
+   if(t.dataset.a==="app"){
+     e.preventDefault();e.stopImmediatePropagation();
+     U.tab="phone";U.app=t.dataset.p;U.mail=null;
+     render();
+   }
+ },true);
+})();
+</script>
 </body></html>
