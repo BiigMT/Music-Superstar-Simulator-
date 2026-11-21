@@ -68,7 +68,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         <div className="max-w-xl space-y-8">
           <div className="space-y-4">
             <p className="text-xs font-medium tracking-[0.2em] uppercase text-[#E5A93C]">
-              Music Career Simulation
+              ARTIST LIFE SIMULATION
             </p>
 
             {/* Bespoke Inline SVG Title Lockup */}
@@ -77,7 +77,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 viewBox="0 0 540 128"
                 className="w-full max-w-[490px] h-auto"
                 role="img"
-                aria-label="Platinum Era"
+                aria-label="Music Superstar Simulator"
               >
                 <defs>
                   <linearGradient id="goldPlaque" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -118,7 +118,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             </div>
 
             <p className="max-w-md text-base leading-relaxed text-neutral-300">
-              Record and master hit records on an interactive mixing console, climb the Global Hot 50 against rival artists, sign or defy major labels, and sell out world stadiums.
+              Build your artist from the first studio session to global superstardom. Make records, grow your fanbase, compete on the charts, navigate the industry and headline your own tour.
             </p>
           </div>
 
