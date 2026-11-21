@@ -35,6 +35,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Build web preview
         run: npm run build
+      - name: Publish Platinum Era as the live game
+        run: cp "Platinum Era.html" dist/index.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
