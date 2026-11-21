@@ -18,6 +18,9 @@ permissions:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,16 +33,19 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      # setup-android v3 still attempts to install the obsolete SDK "tools"
-      # package, which now fails on hosted runners. Keep its SDK environment
-      # setup, but install supported SDK packages explicitly below.
-      - name: Set up Android SDK environment
-        uses: android-actions/setup-android@v3
-        continue-on-error: true
+      # Use the SDK already provisioned on GitHub-hosted Ubuntu runners.
+      # Avoid setup-android v3's obsolete "tools" package installation.
+      - name: Locate Android SDK manager
+        run: |
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
+          test -n "$SDKMANAGER"
+          echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
+          echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
+          echo "SDKMANAGER=$SDKMANAGER" >> "$GITHUB_ENV"
       - name: Install required Android SDK packages
         run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
       - name: Install app dependencies
         run: npm install --no-audit --no-fund
       - name: Build web app
