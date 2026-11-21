@@ -350,14 +350,11 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
  render=function(){oldRender();refreshTabs();if(U.tab==="releases"||U.tab==="industry"){$("main").innerHTML=(U.tab==="releases"?releaseView():industryView())+(U.app?sheet():"");}};
  var oldNext=A.next;
  A.next=function(){
-  oldNext();
   var week=S.wk+1;
+  R.campaigns.forEach(function(c){if(!c.released&&c.releaseWeek<=week){c.released=true;c.momentum=45+c.promo*2;c.streams=0;c.sales=0;c.rank=0;c.peak=0;c.reaction="Fans are discovering "+c.title;S.news.unshift(S.name+" released "+c.kind+" “"+c.title+"”");S.buzz+=5+c.promo;c.songIndices.forEach(function(i){var song=getSong(i);if(song){song.st=2;song.releaseCampaign=c.id}})} });
+  oldNext();
+  week=S.wk+1;
   R.campaigns.forEach(function(c){
-   if(!c.released&&c.releaseWeek<=week){
-    c.released=true;c.momentum=45+c.promo*2;c.streams=0;c.sales=0;c.rank=0;c.peak=0;c.reaction="Fans are discovering "+c.title;
-    S.news.unshift(S.name+" released "+c.kind+" “"+c.title+"”");S.buzz+=5+c.promo;
-    c.songIndices.forEach(function(i){var s=getSong(i);if(s){s.st=2;s.age=0;s.wk=0;s.tot=0;s.releaseCampaign=c.id}});
-   }
    if(c.released){
     var base=0;c.songIndices.forEach(function(i){var s=getSong(i);if(s)base+=Math.max(1,s.q)*12});
     var promoBoost=1+c.promo*.12,indBoost=IND.label&&IND.label!=="indie"?1.3:1;
