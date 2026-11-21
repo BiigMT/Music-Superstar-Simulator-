@@ -458,7 +458,7 @@ export default function App() {
       />
 
       {/* Main Playfield Shell */}
-      <div className="mx-auto flex w-full max-w-[1440px] flex-1 gap-6 px-4 py-6 sm:px-6 pb-24 lg:pb-8">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-1 gap-6 px-4 py-6 pb-28 sm:px-6 lg:pb-8">
         {/* Desktop Studio Rack Sidebar */}
         <aside className="hidden lg:flex w-52 shrink-0 flex-col gap-1.5">
           {NAV_ITEMS.map((item, idx) => {
@@ -543,7 +543,7 @@ export default function App() {
       </div>
 
       {/* Mobile Compact Bottom Rack (<= 15% viewport height) */}
-      <nav className="fixed bottom-0 inset-x-0 z-30 flex lg:hidden items-center justify-around border-t border-white/10 bg-[#0B0D11]/95 px-1 py-1.5">
+      <nav className="fixed bottom-0 inset-x-0 z-30 flex lg:hidden items-center gap-1 justify-start overflow-x-auto overscroll-x-contain border-t border-white/10 bg-[#0B0D11]/95 px-2 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const active = activeTab === item.id;
@@ -555,7 +555,7 @@ export default function App() {
                 synth.playClick();
                 setActiveTab(item.id);
               }}
-              className={`flex flex-col items-center justify-center gap-0.5 rounded px-2 py-1.5 text-[10px] font-medium min-w-[44px] ${
+              className={`flex flex-col items-center justify-center gap-0.5 rounded px-2 py-1.5 text-[10px] font-medium min-w-[68px] shrink-0 ${
                 active ? 'text-[#E5A93C]' : 'text-neutral-400'
               }`}
             >
