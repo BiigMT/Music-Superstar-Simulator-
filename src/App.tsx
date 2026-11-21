@@ -447,7 +447,7 @@ export default function App() {
   if (!gameState) return null;
 
   return (
-    <div className="min-h-screen bg-[#0B0D11] text-[#F3F4F6] flex flex-col">
+    <div className="soundstage-app min-h-screen bg-[#0D0D0F] text-[#F4F4F6] flex flex-col">
       <TopHudBar
         state={gameState}
         muted={muted}
@@ -460,7 +460,7 @@ export default function App() {
       />
 
       {/* Main Playfield Shell */}
-      <div className="mx-auto flex w-full max-w-[1440px] flex-1 gap-6 px-4 py-6 pb-28 sm:px-6 lg:pb-8">
+      <div className="soundstage-playfield mx-auto flex w-full max-w-[1440px] flex-1 gap-6 px-4 py-6 pb-28 sm:px-6 lg:pb-8">
         {/* Desktop Studio Rack Sidebar */}
         <aside className="hidden lg:flex w-52 shrink-0 flex-col gap-1.5">
           {NAV_ITEMS.map((item, idx) => {
@@ -491,7 +491,7 @@ export default function App() {
         </aside>
 
         {/* Active Desk Viewport */}
-        <main className="flex-1 min-w-0">
+        <main className="soundstage-main flex-1 min-w-0">
           {activeTab === 'overview' && (
             <OverviewDeck state={gameState} onNavigate={(tab) => { synth.playClick(); setActiveTab(tab); }} />
           )}
@@ -545,7 +545,7 @@ export default function App() {
       </div>
 
       {/* Mobile navigation: core tabs plus a tidy More drawer */}
-      <nav className="career-mobile-nav lg:hidden">
+      <nav className="career-mobile-nav soundstage-dock lg:hidden">
         {NAV_ITEMS.slice(0, 4).map((item) => {
           const Icon = item.icon;
           const active = activeTab === item.id;
