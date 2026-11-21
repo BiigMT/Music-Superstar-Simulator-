@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'Platinum Era.html'
       - 'src/**'
       - 'public/**'
       - 'index.html'
