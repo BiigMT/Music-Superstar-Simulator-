@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Mic2,
   Newspaper,
+  MoreHorizontal,
 } from 'lucide-react';
 import { synth } from './audio/synthEngine';
 import { AwardsHall } from './components/AwardsHall';
@@ -72,6 +73,7 @@ export default function App() {
   const [savedGame, setSavedGame] = useState<GameState | null>(() => loadGameState());
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [muted, setMuted] = useState(false);
   const [toast, setToast] = useState<{ text: string; tone: 'info' | 'success' | 'error' } | null>(null);
 
@@ -542,29 +544,36 @@ export default function App() {
         </main>
       </div>
 
-      {/* Mobile Compact Bottom Rack (<= 15% viewport height) */}
-      <nav className="fixed bottom-0 inset-x-0 z-30 flex lg:hidden items-center gap-1 justify-start overflow-x-auto overscroll-x-contain border-t border-white/10 bg-[#0B0D11]/95 px-2 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {NAV_ITEMS.map((item) => {
+      {/* Mobile navigation: core tabs plus a tidy More drawer */}
+      <nav className="career-mobile-nav lg:hidden">
+        {NAV_ITEMS.slice(0, 4).map((item) => {
           const Icon = item.icon;
           const active = activeTab === item.id;
           return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => {
-                synth.playClick();
-                setActiveTab(item.id);
-              }}
-              className={`flex flex-col items-center justify-center gap-0.5 rounded px-2 py-1.5 text-[10px] font-medium min-w-[68px] shrink-0 ${
-                active ? 'text-[#E5A93C]' : 'text-neutral-400'
-              }`}
-            >
-              <Icon className="h-4 w-4" />
-              <span className="truncate">{item.label}</span>
+            <button key={item.id} type="button" onClick={() => { synth.playClick(); setActiveTab(item.id); setMobileMoreOpen(false); }} className={active ? 'is-active' : ''}>
+              <Icon className="h-[18px] w-[18px]" />
+              <span>{item.label}</span>
             </button>
           );
         })}
+        <button type="button" className={mobileMoreOpen || NAV_ITEMS.slice(4).some((item) => item.id === activeTab) ? 'is-active' : ''} onClick={() => setMobileMoreOpen((v) => !v)}>
+          <MoreHorizontal className="h-[18px] w-[18px]" />
+          <span>More</span>
+        </button>
       </nav>
+      {mobileMoreOpen && (
+        <div className="career-mobile-more lg:hidden">
+          {NAV_ITEMS.slice(4).map((item) => {
+            const Icon = item.icon;
+            const active = activeTab === item.id;
+            return (
+              <button key={item.id} type="button" className={active ? 'is-active' : ''} onClick={() => { synth.playClick(); setActiveTab(item.id); setMobileMoreOpen(false); }}>
+                <Icon size={17} /><span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Non-blocking Toast Feedback */}
       {toast && (
