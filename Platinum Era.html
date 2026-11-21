@@ -479,4 +479,104 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
  refreshTabs();
 })();
 </script>
+
+/* Platinum Era phone overhaul: app launcher, app views, and movable icons */
+(function(){
+ if(window.__pePhoneOS)return;window.__pePhoneOS=true;
+ S.phoneLayout=S.phoneLayout||["sd","az","pm","promo","fb","gg","mail","set","link","wa","phone","cal","bank","cam","gal"];
+ S.phoneDock=S.phoneDock||["yt","ig","x","tt"];
+ S.phoneChat=S.phoneChat||"Manager";S.phoneMessages=S.phoneMessages||{};
+ var extra=[
+ ["wa","WhatsApp","linear-gradient(135deg,#25d366,#128c7e)","☎"],
+ ["phone","Phone","linear-gradient(#45a4ff,#1766c1)","📞"],
+ ["cal","Calendar","linear-gradient(#f8f8f8,#ddd)","📅"],
+ ["bank","Banking","linear-gradient(#17a673,#08734d)","$"],
+ ["cam","Camera","linear-gradient(#555,#111)","📷"],
+ ["gal","Gallery","linear-gradient(#a855f7,#6d28d9)","🖼️"]
+ ];
+ extra.forEach(function(a){if(!AP.some(function(x){return x[0]===a[0]}))AP.push(a)});
+ function allApps(){var list=AP.slice();DK.forEach(function(a){if(!list.some(function(x){return x[0]===a[0]}))list.push(a)});return list}
+ function appData(id){return allApps().find(function(a){return a[0]===id})}
+ function safe(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+ function saveLayout(){try{localStorage.setItem("pe_save",JSON.stringify(S))}catch(e){}}
+ function appIcon(a,edit){return '<button class="phone-app-icon" data-a="app" data-p="'+a[0]+'" data-phone-id="'+a[0]+'" style="--app-bg:'+a[2]+'"><span class="phone-icon-art" style="background:'+a[2]+';color:'+(a[2]==="#fff"?"#222":"#fff")+'">'+a[3]+'</span><span class="phone-app-name">'+safe(a[1])+'</span>'+(edit?'<small class="phone-edit-mark">↕</small>':'')+'</button>'}
+ function phoneHome(){
+  var editing=!!U.phoneEdit,apps=allApps(),layout=S.phoneLayout.filter(function(id){return apps.some(function(a){return a[0]===id})});
+  apps.forEach(function(a){if(!layout.includes(a[0])&&!S.phoneDock.includes(a[0]))layout.push(a[0])});
+  S.phoneLayout=layout;
+  return '<div class="phone-os"><div class="phone-status"><span>9:41</span><span>▮▮▮  Wi-Fi  ▰</span></div><div class="phone-welcome"><b>'+safe(S.name)+'</b><span>Week '+(S.wk+1)+' · '+fmt(S.money)+' cash</span></div><div class="phone-launch-grid '+(editing?"phone-editing":"")+'" data-phone-grid>'+layout.map(function(id){return appIcon(appData(id),editing)}).join("")+'</div><div class="phone-dock" data-phone-dock>'+S.phoneDock.map(function(id){return appIcon(appData(id),editing)}).join("")+'</div><div class="phone-edit-controls"><button class="btn sm alt" data-a="phoneEdit">'+(editing?"Done":"Edit apps")+'</button><span class="mut">'+(editing?"Drag an icon to move it":"Tap an app to open")+'</span></div></div>'
+ }
+ var oldPhoneView=phoneView;
+ phoneView=function(){return phoneHome()};
+ var oldSheet=sheet;
+ function appHead(a){return '<div class="phone-app-head"><button class="phone-back" data-a="close">‹</button><span class="phone-head-icon" style="background:'+a[2]+'">'+a[3]+'</span><b>'+safe(a[1])+'</b><span class="phone-head-spacer"></span><span class="phone-status-mini">•••</span></div>'}
+ function appBox(title,body){return '<section class="phone-card"><h3>'+title+'</h3>'+body+'</section>'}
+ function instagram(){
+  var posts=[{name:"Nova",text:"Studio night. Something special coming soon.",likes:482},{name:"Juno",text:"Independent artists—keep believing in the sound.",likes:236},{name:S.name,text:"Building my next release. Stay tuned 🎤",likes:Math.max(0,S.f.ig*2)}];
+  return '<div class="phone-social-top"><b>Instagram</b><span>＋　♡　✉</span></div><div class="phone-story-row">'+["Your story","Nova","Juno","Echo","Lyra"].map(function(n,i){return '<div class="phone-story"><span>'+["＋","🌙","🎤","🎧","✨"][i]+'</span><small>'+n+'</small></div>'}).join("")+'</div>'+posts.map(function(p,i){return '<article class="phone-post"><div class="phone-post-user"><span class="phone-avatar">'+(i===2?"🎤":"★")+'</span><b>'+safe(p.name)+'</b><span>•••</span></div><div class="phone-post-art">'+(i===2?"🎙️":"🎵")+'<small>'+safe(p.text)+'</small></div><div class="phone-post-actions">♡　♡　↗ <span>▱</span></div><p><b>'+fmt(p.likes)+' likes</b></p><p class="mut">'+safe(p.text)+'</p></article>'}).join("")+'<div class="phone-action-row">'+btn("phonePost","＋ Share a post","","wide")+'</div>'
+ }
+ function whatsapp(){
+  var people=["Manager","Producer","Deborah","Label A&R","Best Friend"],chat=S.phoneChat||"Manager",msgs=S.phoneMessages[chat]||[];
+  return '<div class="phone-chat-title">Chats <span>⌕　✎</span></div>'+people.map(function(n){return '<button class="phone-chat-person" data-a="phoneChat" data-p="'+safe(n)+'"><span class="phone-avatar">💬</span><span><b>'+n+'</b><small>'+(msgs.length&&n===chat?safe(msgs[msgs.length-1].text):"Tap to open conversation")+'</small></span><small>›</small></button>'}).join("")+'<div class="phone-chat-open"><b>'+safe(chat)+'</b><div class="phone-chat-thread">'+(msgs.length?msgs.map(function(m){return '<div class="phone-bubble '+(m.me?"me":"")+'">'+safe(m.text)+'</div>'}).join(""):'<p class="mut">Your conversation starts here. Message your contact about music, plans or opportunities.</p>')+'</div><div class="phone-compose"><input id="phoneMessageInput" placeholder="Message '+safe(chat)+'…"><button class="btn sm" data-a="phoneSend">Send</button></div>'
+ }
+ function phoneAppSheet(){
+  var a=appData(U.app)||DK.find(function(x){return x[0]===U.app})||AP[0],id=U.app,b="";
+  if(id==="ig")b=instagram();
+  else if(id==="wa")b=whatsapp();
+  else if(id==="phone")b=appBox("Recent calls",'<div class="phone-list-row">📞 Manager <span>Call back</span></div><div class="phone-list-row">📞 Producer <span>Yesterday</span></div><div class="phone-list-row">📞 Label A&R <span>Week '+(S.wk+1)+'</span></div><p class="mut">Calls create career conversations and opportunities.</p>');
+  else if(id==="cal"){var events=["Studio session","Release planning","Industry check-in"];b=appBox("November · Week "+(S.wk+1),'<div class="phone-calendar-grid">'+Array.from({length:21},function(_,i){return '<span class="'+(i===S.wk%21?"today":"")+'">'+(i+1)+'</span>'}).join("")+'</div><h4>Upcoming</h4>'+events.map(function(x,i){return '<div class="phone-list-row">📌 '+x+' <span>Week '+(S.wk+i+1)+'</span></div>'}).join("")+'<p class="mut">Release dates are synced from your release campaigns.</p>')}
+  else if(id==="bank"){b=appBox("Available balance",'<div class="phone-bank-balance"></html>
++fmt(S.money)+'</div><div class="mut">Career account · simulated in-game banking</div>')+appBox("Recent activity",'<div class="phone-list-row">Music career balance <span></html>
++fmt(S.money)+'</span></div><div class="phone-list-row">Weekly expenses <span>-$60</span></div><div class="phone-list-row">Royalties & earnings <span>Based on streams</span></div>')}
+  else if(id==="cam"||id==="gal"){b=appBox(id==="cam"?"Camera":"Gallery",'<div class="phone-camera-preview">'+(id==="cam"?"📸":"🖼️")+'<p>'+ (id==="cam"?"Camera ready":"Your career memories")+'</p></div><p class="mut">'+(id==="cam"?"Capture a career moment (game simulation).":"Photos from music videos, shows and promotional moments will appear here.")+'</p>'+btn("phoneCapture",id==="cam"?"Take photo":"Add career memory","","wide"))}
+  else if(id==="mail"){b=appBox("Inbox",S.mail.map(function(m){return '<div class="phone-list-row"><span><b>'+safe(m.subj)+'</b><small>'+safe(m.from)+'</small></span><span>›</span></div>'}).join("")||'<p class="mut">No messages yet.</p>')}
+  else if(id==="set"){b=appBox("Phone settings",'<div class="phone-list-row">Wallpaper <span>Midnight</span></div><div class="phone-list-row">App layout <span>Custom</span></div><div class="phone-list-row">Notifications <span>On</span></div><p class="mut">App positions are saved with your career.</p>')}
+  else if(id==="gg"){b=appBox("Search the music world",'<input id="phoneSearchInput" placeholder="Search artists, songs, news…" class="phone-search"><div class="phone-list-row">'+safe(S.name)+' <span>Artist profile</span></div>'+S.news.slice(0,5).map(function(n){return '<p class="mut">'+safe(n)+'</p>'}).join(""))}
+  else if(["sd","az","pm","promo"].includes(id)){b=appBox(a[1],'<div class="phone-bank-balance">'+fmt(S.st[id]||S.buzz)+'</div><p class="mut">'+(id==="promo"?"Buzz and promotion campaigns":"Streams · career platform stats")+'</p>'+btn("phonePlatformAction",id==="promo"?"Run promotion":"Promote your music",id,"wide"))}
+  else if(id==="yt"||id==="tt"||id==="x"||id==="fb"){b=appBox(a[1],'<div class="phone-social-top"><b>For you</b><span>＋</span></div>'+S.news.slice(0,5).map(function(n){return '<article class="phone-post"><p>'+safe(n)+'</p><div class="phone-post-actions">♡　↗</div></article>'}).join("")+btn("phonePost","Create post","","wide"))}
+  else if(id==="link"){b=appBox("Network",'<p class="mut">Your music industry connections</p>'+S.con.map(function(n){return '<div class="phone-list-row">🤝 '+safe(n)+' <span>Connected</span></div>'}).join("")||'<p class="mut">No connections yet.</p>')}
+  else if(id==="az"||id==="pm"||id==="sd"){b=oldSheet()}
+  else {b=appBox(a[1],'<p class="mut">Your '+safe(a[1])+' app is connected to your music career.</p>')}
+  return '<div class="phone-app-screen">'+appHead(a)+'<div class="phone-app-content">'+b+'</div><div class="phone-home-indicator" data-a="close"></div></div>'
+ }
+ var oldRender=render;
+ render=function(){oldRender();if(U.tab==="phone"){$("main").innerHTML=phoneHome()+(U.app?phoneAppSheet():"");wirePhoneDrag()}};
+ function wirePhoneDrag(){
+  var main=$("main");if(!main||main.dataset.phoneDrag)return;main.dataset.phoneDrag="1";
+  var source=null,startX=0,startY=0,moved=false;
+  main.addEventListener("pointerdown",function(e){var t=e.target.closest("[data-phone-id]");if(!t||!U.phoneEdit)return;source=t.dataset.phoneId;startX=e.clientX;startY=e.clientY;moved=false});
+  main.addEventListener("pointermove",function(e){if(source&&Math.abs(e.clientX-startX)+Math.abs(e.clientY-startY)>12)moved=true});
+  main.addEventListener("pointerup",function(e){if(!source)return;var from=source;source=null;if(!moved)return;var target=document.elementFromPoint(e.clientX,e.clientY),tile=target&&target.closest("[data-phone-id]");if(!tile||tile.dataset.phoneId===from)return;var to=tile.dataset.phoneId,fromDock=S.phoneDock.includes(from),toDock=S.phoneDock.includes(to),arr1=fromDock?S.phoneDock:S.phoneLayout,arr2=toDock?S.phoneDock:S.phoneLayout,i=arr1.indexOf(from),j=arr2.indexOf(to);if(i<0||j<0)return;if(arr1===arr2){arr1[i]=to;arr1[j]=from}else{arr1[i]=to;arr2[j]=from}U.skipPhoneClick=true;saveLayout();render();toast("App moved")});
+ }
+ var baseClick=document.addEventListener;
+ document.addEventListener("click",function(e){
+  var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,p=t.dataset.p;
+  if(a==="phoneEdit"){e.preventDefault();e.stopImmediatePropagation();U.phoneEdit=!U.phoneEdit;render();return}
+  if(a==="app"&&U.phoneEdit&&U.tab==="phone"){e.preventDefault();e.stopImmediatePropagation();toast("Drag apps to swap their positions");return}
+  if(a==="phoneChat"){e.preventDefault();e.stopImmediatePropagation();U.phoneChat=p;render();return}
+  if(a==="phoneSend"){e.preventDefault();e.stopImmediatePropagation();var input=document.getElementById("phoneMessageInput"),txt=input&&input.value.trim();if(!txt){toast("Write a message first");return}var chat=U.phoneChat||"Manager";S.phoneMessages[chat]=S.phoneMessages[chat]||[];S.phoneMessages[chat].push({text:txt,me:1});render();toast("Message sent");return}
+  if(a==="phonePost"){e.preventDefault();e.stopImmediatePropagation();S.buzz+=1;var id="ig";S.f[id]=(S.f[id]||0)+rnd(2,8);S.news.unshift(S.name+" shared a new post. Fans are reacting.");S.eventsLog=S.eventsLog||[];S.eventsLog.unshift("Posted on social media: +buzz and followers");render();toast("Post shared · fans are reacting");return}
+  if(a==="phoneCapture"){e.preventDefault();e.stopImmediatePropagation();S.eventsLog=S.eventsLog||[];S.eventsLog.unshift("Captured a career memory");S.news.unshift(S.name+" captured a moment from the career");render();toast("Saved to your career gallery");return}
+  if(a==="phonePlatformAction"){e.preventDefault();e.stopImmediatePropagation();if(p==="promo"){if(!spend(100,10))return;S.buzz+=2;toast("Promotion started")}else{if(!spend(0,10))return;S.buzz+=1;toast("Music promoted")}render();return}
+ },true);
+ var style=document.createElement("style");style.textContent="
+ .phone-os{min-height:calc(100vh - 140px);padding:10px 12px 18px;border-radius:28px;background:radial-gradient(ellipse at top,#4b3d79 0%,#17142e 45%,#090b18 100%);color:#fff;position:relative;overflow:hidden}
+ .phone-status{display:flex;justify-content:space-between;font-size:12px;font-weight:700;padding:4px 8px;color:#f4f0ff}
+ .phone-welcome{display:flex;flex-direction:column;gap:3px;padding:22px 10px 16px}.phone-welcome b{font-size:22px}.phone-welcome span{font-size:12px;color:#c7c0e2}
+ .phone-launch-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 6px;padding:10px 2px 22px}
+ .phone-app-icon{border:0;background:transparent;color:white;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;position:relative;touch-action:none;padding:2px}
+ .phone-icon-art{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:27px;box-shadow:0 5px 16px #0005}
+ .phone-app-name{font-size:11px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px #000}
+ .phone-dock{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 6px;background:#ffffff1b;border:1px solid #ffffff1b;border-radius:23px;margin:8px 0 16px;backdrop-filter:blur(12px)}
+ .phone-edit-controls{display:flex;align-items:center;justify-content:center;gap:10px}.phone-edit-mark{position:absolute;right:0;top:-4px;background:#fff;color:#111;border-radius:50%;padding:1px 5px}
+ .phone-app-screen{position:relative;z-index:3;margin:-12px;border-radius:24px;min-height:calc(100vh - 110px);background:#f7f7fb;color:#181821;display:flex;flex-direction:column;overflow:hidden}
+ .phone-app-head{display:flex;align-items:center;gap:10px;padding:12px;background:#fff;border-bottom:1px solid #e8e8ef;position:sticky;top:0}.phone-back{border:0;background:#f0eff6;border-radius:50%;width:34px;height:34px;font-size:26px;color:#222}.phone-head-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:white}.phone-head-spacer{flex:1}.phone-status-mini{color:#888}
+ .phone-app-content{padding:12px;flex:1;overflow:auto}.phone-card{background:#fff;border:1px solid #ececf2;border-radius:17px;padding:15px;margin-bottom:12px;box-shadow:0 3px 12px #18182a08}.phone-card h3{margin:0 0 12px;font-size:16px}.phone-list-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #eee;color:#333}.phone-list-row span{color:#777;font-size:12px}.phone-list-row small{display:block;color:#777;margin-top:3px}
+ .phone-social-top,.phone-chat-title{display:flex;justify-content:space-between;align-items:center;padding:8px 2px 14px;font-size:19px}.phone-story-row{display:flex;gap:12px;overflow:auto;padding:6px 0 14px}.phone-story{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:54px}.phone-story span{width:48px;height:48px;border-radius:50%;border:2px solid #d94c9c;display:grid;place-items:center;background:#fff;font-size:22px}.phone-story small{font-size:10px}.phone-post{background:white;border:1px solid #e8e8ed;border-radius:16px;padding:12px;margin-bottom:12px}.phone-post-user{display:flex;align-items:center;gap:8px}.phone-post-user span:last-child{margin-left:auto}.phone-avatar{width:32px;height:32px;border-radius:50%;background:#e9e5f7;display:grid;place-items:center}.phone-post-art{height:155px;margin:10px 0;border-radius:12px;background:linear-gradient(135deg,#31285a,#d75a89);display:flex;flex-direction:column;justify-content:center;align-items:center;color:white;font-size:48px}.phone-post-art small{font-size:12px;text-align:center;padding:8px}.phone-post-actions{padding:4px 0;font-size:19px}.phone-post-actions span{float:right}.phone-post p{font-size:12px;margin:5px 0}.phone-action-row{padding:8px}
+ .phone-chat-person{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:white;border:0;border-bottom:1px solid #eee;padding:12px}.phone-chat-person>span:nth-child(2){flex:1;display:flex;flex-direction:column;gap:4px}.phone-chat-person small{color:#777;font-size:12px}.phone-chat-open{background:#fff;border-radius:14px;padding:12px;margin-top:12px}.phone-chat-thread{min-height:90px;padding:10px 0}.phone-bubble{background:#eee;padding:9px 12px;border-radius:14px;margin:5px 0;max-width:85%;font-size:13px}.phone-bubble.me{background:#d9fdd3;margin-left:auto}.phone-compose{display:flex;gap:8px;padding:10px;background:#fff;position:sticky;bottom:0}.phone-compose input,.phone-search{min-width:0;flex:1;padding:10px;border:1px solid #ddd;border-radius:20px;background:#fff;color:#222}.phone-calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.phone-calendar-grid span{text-align:center;padding:8px 0;border-radius:8px;background:#f2f2f7}.phone-calendar-grid .today{background:#6c50bc;color:#fff}.phone-bank-balance{font-size:30px;font-weight:800;padding:8px 0}.phone-camera-preview{height:210px;border-radius:16px;background:#171722;color:#fff;display:grid;place-items:center;font-size:54px;text-align:center}.phone-camera-preview p{font-size:13px}.phone-home-indicator{width:90px;height:5px;border-radius:8px;background:#2223;margin:12px auto 8px;cursor:pointer}
+ @media(max-width:420px){.phone-icon-art{width:47px;height:47px;border-radius:14px}.phone-launch-grid{gap:13px 4px}.phone-app-name{font-size:10px}}
+ ";
+ document.head.appendChild(style);
+})();
+
 </body></html>
