@@ -274,7 +274,7 @@ A.rec=function(p){
  if(!s||s.st!==0){toast("This track is not ready to record");return}
  var cost=tier==="premium"?250:100,energy=tier==="premium"?35:25;
  if(!spend(cost,energy))return;
- var upgrade=S.studioLevel||0,boost=(tier==="premium"?rnd(18,28):rnd(8,18))+upgrade;
+ var upgrade=S.studioQuality||0,boost=(tier==="premium"?rnd(18,28):rnd(8,18))+upgrade;
  s.q+=boost;s.st=1;s.recording=tier;S.skill=Math.min(100,S.skill+(tier==="premium"?2:1));
  toast((tier==="premium"?"Premium":"Standard")+" recording complete · quality "+s.q);
 };
