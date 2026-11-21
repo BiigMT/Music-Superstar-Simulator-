@@ -167,6 +167,16 @@ const home0=home;home=function(){return '<div class="box"><h3>Career setup & sav
 const studio0=studio;studio=function(){let extra='<div class="box"><h3>Album & collaboration</h3><div class="row"><span class="mut">3 released tracks required</span>'+btn("album","Create album","","sm")+'</div></div>';extra+=studio0();extra+=S.songs.map((s,i)=>{if(!s.rollout)s.rollout={};return '<div class="box"><h3>'+s.t+' · release campaign</h3><div class="row">'+btn("feature","Feature",i,"sm alt")+btn("rollout",s.rollout.teaser?"Teaser ✓":"Teaser",i+"|teaser","sm")+'</div><div class="row">'+btn("rollout",s.rollout.presave?"Pre-save ✓":"Pre-save $50",i+"|presave","sm alt")+btn("rollout",s.rollout.video?"Video ✓":"Music video $250",i+"|video","sm")+'</div><div class="mut">'+(s.rollout.teaser?"Teaser published":"No teaser")+' · '+fmt(s.preSaves||0)+' pre-saves · '+fmt(s.videoViews||0)+' video views</div></div>'}).join("");extra+=S.albums.map(a=>'<div class="box"><h3>💿 '+a.name+'</h3><div class="mut">'+a.songs.length+' tracks · '+fmt(a.streams)+' album streams</div></div>').join("");return extra};
 const career0=career;career=function(){let c='<div class="box"><h3>Record label</h3><div class="mut">'+(S.label?"Signed to "+S.label+" · "+(S.contract?.share||50)+"% royalty":"Independent artist")+'</div><div class="row">'+btn("offer","Request offer","","sm")+btn("counter","Negotiate","","sm alt")+'</div></div><div class="box"><h3>Touring</h3><div class="mut">'+(S.tour?S.tour.name+" · "+S.tour.shows+"/"+S.tour.goal+" shows":"Book a tour to play multiple shows")+'</div><div class="row">'+(S.tour?btn("tourShow","Play tour show","","sm"):btn("bookTour","Book tour","","sm"))+'</div></div>';return c+career0()+'<div class="box"><h3>Artist progression</h3><div class="big">'+title()+'</div><div class="mut">Skill '+S.skill+' · Buzz '+S.buzz+' · '+fmt(tf())+' followers</div></div>'};
 const charts0=charts;charts=function(){return '<div class="box"><h3>Charts & history</h3><div class="mut">Global weekly Hot 50 · up to 52 weeks of career history</div></div>'+charts0()+'<div class="box"><h3>Album chart</h3>'+(S.albums.length?S.albums.slice().sort((a,b)=>b.streams-a.streams).map((a,i)=>'<div class="row"><span>'+(i+1)+'. '+a.name+'</span><span class="mut">'+fmt(a.streams)+'</span></div>').join(""):'<div class="mut">Release an album to chart.</div>')+'</div><div class="box"><h3>Career history</h3>'+S.history.slice(-5).reverse().map(h=>'<div class="row mut">Week '+h.week+' · '+fmt(h.streams)+' streams · '+fmt(h.followers)+' fans · peak '+(h.peak||"—")+'</div>').join("")+'</div>'};
+render=function(){
+chk();
+$("d").textContent="Week "+(S.wk+1);
+$("t").textContent=new Date(2026,0,5+S.wk*7).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+$("m").textContent="$"+fmt(S.money);$("e").textContent="Energy "+S.energy;
+$("nav").innerHTML=TABS.map(t=>'<button class="'+(U.tab===t[0]?"on":"")+'" data-a="tab" data-p="'+t[0]+'"><span>'+t[2]+'</span>'+t[1]+'</button>').join("");
+const view={home:home,studio:studio,charts:charts,career:career,goals:goals};
+const keep=$("main").scrollTop;$("main").innerHTML=(view[U.tab]||home)()+(U.app?sheet():"");$("main").scrollTop=keep;
+try{localStorage.setItem("pe_save",JSON.stringify(S))}catch(e){}
+};
 render();
 })();
 </script>
