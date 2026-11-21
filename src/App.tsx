@@ -7,6 +7,7 @@ import {
   MapPin,
   MessageSquare,
   Mic2,
+  Newspaper,
 } from 'lucide-react';
 import { synth } from './audio/synthEngine';
 import { AwardsHall } from './components/AwardsHall';
@@ -15,6 +16,7 @@ import { CharacterCreate } from './components/CharacterCreate';
 import { ChartsBoard } from './components/ChartsBoard';
 import { CareerSummaryModal, EventModal, PauseModal } from './components/Modals';
 import { OverviewDeck } from './components/OverviewDeck';
+import { IndustryDesk } from './components/IndustryDesk';
 import { SocialPressDesk } from './components/SocialPressDesk';
 import { StudioDesk } from './components/StudioDesk';
 import { TitleScreen } from './components/TitleScreen';
@@ -62,6 +64,7 @@ const NAV_ITEMS: { id: NavTab; label: string; icon: React.ComponentType<{ classN
   { id: 'tour', label: 'Touring', icon: MapPin },
   { id: 'business', label: 'Business', icon: Briefcase },
   { id: 'awards', label: 'Awards', icon: Award },
+  { id: 'industry', label: 'Industry', icon: Newspaper },
 ];
 
 export default function App() {
@@ -152,7 +155,7 @@ export default function App() {
         handleAdvanceWeek();
       } else if (e.key.toLowerCase() === 'm') {
         toggleMute();
-      } else if (['1', '2', '3', '4', '5', '6', '7'].includes(e.key)) {
+      } else if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(e.key)) {
         const idx = Number(e.key) - 1;
         if (NAV_ITEMS[idx]) {
           synth.playClick();
@@ -526,6 +529,7 @@ export default function App() {
               onUpgradeLifestyle={handleUpgradeLifestyle}
             />
           )}
+          {activeTab === 'industry' && <IndustryDesk state={gameState} onNavigate={(tab) => { synth.playClick(); setActiveTab(tab); }} />}
           {activeTab === 'awards' && (
             <AwardsHall
               state={gameState}

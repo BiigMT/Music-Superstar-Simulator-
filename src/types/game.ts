@@ -1,6 +1,6 @@
 export type GameScreen = 'TITLE_MENU' | 'CHARACTER_CREATE' | 'PLAYING' | 'PAUSED' | 'CAREER_SUMMARY';
 
-export type NavTab = 'overview' | 'studio' | 'charts' | 'social' | 'tour' | 'business' | 'awards';
+export type NavTab = 'overview' | 'studio' | 'charts' | 'social' | 'tour' | 'business' | 'awards' | 'industry';
 
 export type Genre = 'Hip-Hop' | 'Pop' | 'R&B' | 'Rock' | 'Electronic';
 
