@@ -568,7 +568,7 @@ export default function App() {
             const active = activeTab === item.id;
             return (
               <button key={item.id} type="button" className={active ? 'is-active' : ''} onClick={() => { synth.playClick(); setActiveTab(item.id); setMobileMoreOpen(false); }}>
-                <Icon size={17} /><span>{item.label}</span>
+                <Icon className="h-[17px] w-[17px]" /><span>{item.label}</span>
               </button>
             );
           })}
