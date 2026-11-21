@@ -30,8 +30,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - name: Set up Android SDK
+      # setup-android v3 still attempts to install the obsolete SDK "tools"
+      # package, which now fails on hosted runners. Keep its SDK environment
+      # setup, but install supported SDK packages explicitly below.
+      - name: Set up Android SDK environment
         uses: android-actions/setup-android@v3
+        continue-on-error: true
+      - name: Install required Android SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
       - name: Install app dependencies
         run: npm install --no-audit --no-fund
       - name: Build web app
