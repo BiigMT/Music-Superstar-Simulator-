@@ -361,13 +361,12 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
    if(c.released){
     var base=0;c.songIndices.forEach(function(i){var s=getSong(i);if(s)base+=Math.max(1,s.q)*12});
     var promoBoost=1+c.promo*.12,indBoost=IND.label&&IND.label!=="indie"?1.3:1;
-    var weekly=Math.round((base+tf()*.45+S.buzz*18)*promoBoost*indBoost*(.65+Math.random()*.7)*Math.max(.12,c.momentum/100));
+    var weekly=c.songIndices.reduce(function(total,i){var song=getSong(i);return total+(song?song.wk:0)},0);
+    weekly=Math.round(weekly*promoBoost*indBoost);
     c.streams+=weekly;c.sales+=Math.round(weekly*(c.kind==="album"?.008:.004));c.momentum=Math.max(5,Math.min(150,c.momentum+(weekly>700?rnd(3,10):rnd(-12,2))));
     c.rank=Math.max(1,Math.min(100,Math.round(100-(c.streams/Math.max(1,weekly*4))*8-c.momentum*.35+Math.random()*20)));c.peak=c.peak?Math.min(c.peak,c.rank):c.rank;
     c.reaction=c.momentum>95?"Fans are loving it":c.momentum>60?"Positive word of mouth":c.momentum>30?"Mixed fan response":"Momentum is fading";
-    S.st.sd+=Math.round(weekly*.45);S.st.az+=Math.round(weekly*.3);S.st.pm+=Math.round(weekly*.25);
     S.money+=Math.round(weekly*.003*(1-(IND.contract?IND.contract.royalty:0)/100));
-    c.songIndices.forEach(function(i){var s=getSong(i);if(s){s.age++;s.wk=weekly;s.tot+=weekly}});
    }
   });
   if(IND.contract&&IND.contract.weeks>0){IND.contract.weeks--;if(!IND.contract.weeks){S.news.unshift(IND.contract.name+" contract has ended. You can renegotiate.")}}
@@ -380,6 +379,39 @@ migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(save
   var parts=String(t.dataset.p||"").split("|"),a=parts[0],p=parts[1];
   if(a==="kind"){selectedKind=p;selectedSongs=[]}
   if(a==="cover")selectedCover=p;
+  if(a==="label"||a==="producer"||a==="collab"||a==="award"||a==="decision"){
+   var ip=p;
+   if(a==="label"){
+    var ld={indie:{name:"Independent",advance:0,royalty:0,weeks:0},nova:{name:"Nova Records",advance:2000,royalty:35,weeks:24},pulse:{name:"Pulse Music Group",advance:5000,royalty:45,weeks:36}}[ip];
+    if(!ld){toast("Choose a label");return}
+    if(IND.contract&&IND.contract.weeks>0){toast("Your current contract is still active");return}
+    S.money+=ld.advance;IND.label=ip;IND.contract=ip==="indie"?null:{name:ld.name,royalty:ld.royalty,weeks:ld.weeks};S.news.unshift(S.name+" chose "+ld.name);toast("Career direction chosen");
+   }else if(a==="producer"){
+    var pd={bedroom:[100,4,"Local producer"],pro:[450,10,"Hitmaker producer"],legend:[1200,18,"Legendary producer"]}[ip];
+    var idx=prompt("Enter the number of a recorded track:\\n"+S.songs.map(function(x,i){return x.st===1?i+": "+x.t:""}).filter(Boolean).join("\\n"));var song=getSong(idx);
+    if(!pd||!song||song.st!==1){toast("Select a recorded track");return}
+    if(!spend(pd[0],10))return;song.q+=pd[1];IND.producer=pd[2];S.news.unshift(song.t+" produced by "+pd[2]);toast("Production session complete");
+   }else if(a==="collab"){
+    var song=getSong(ip),name=pick(["Nova","Juno","Echo","Lyra"]);
+    if(!song||song.st!==1){toast("Record a track first");return}
+    if(IND.collabs.includes(song.t)){toast("Already collaborated on this track");return}
+    song.q+=rnd(5,12);song.features=song.features||[];song.features.push(name);IND.collabs.push(song.t);S.buzz+=4;S.news.unshift(S.name+" collaborated with "+name+" on "+song.t);toast("Collaboration recorded with "+name);
+   }else if(a==="award"){
+    if(S.wk<12){toast("Awards unlock after 12 weeks");return}
+    var score=tf()+ts()/50+(S.peak?Math.max(0,100-S.peak)*10:0),won=score>4000;
+    IND.awards.push({name:"Independent Music Awards",week:S.wk,won:won});
+    if(won){S.money+=2500;S.buzz+=15;toast("Award won · $2,500")}else toast("You received a nomination");
+    S.news.unshift(S.name+(won?" won ":" was nominated for ")+"Independent Music Awards");
+   }else if(a==="decision"){
+    var choice=prompt("Choose a major career move:\\n1 Focus on music (+5 skill, -15 energy)\\n2 Go mainstream (+12 buzz)\\n3 Protect independence (+3 buzz, leave label)\\n4 Take a break (+30 energy, release momentum drops)");
+    if(choice==="1"){S.skill=Math.min(100,S.skill+5);S.energy=Math.max(0,S.energy-15);IND.decisions.push("Focused on music: +5 skill")}
+    else if(choice==="2"){S.buzz+=12;IND.decisions.push("Chose a mainstream push: buzz increased")}
+    else if(choice==="3"){S.buzz+=3;IND.label="indie";IND.contract=null;IND.decisions.push("Protected independence and creative control")}
+    else if(choice==="4"){S.energy=Math.min(100,S.energy+30);R.campaigns.forEach(function(c){if(c.released)c.momentum=Math.max(5,c.momentum-10)});IND.decisions.push("Took a break to recover")}
+    else toast("No decision made");
+   }
+   render();return;
+  }
   if(a==="create"){
    var max=selectedKind==="single"?1:selectedKind==="EP"?3:8;
    if(selectedSongs.length!==max){toast("Select exactly "+max+" recorded track"+(max>1?"s":""));return}
