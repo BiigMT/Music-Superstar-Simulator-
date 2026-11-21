@@ -267,3 +267,11 @@ body,.min-h-screen { background:#17142A !important; }
   .career-hero__image { width:56%; }
   .career-artist-name { font-size:29px; }
 }
+
+/* Shared app controls follow the new teal / cool-blue accent system */
+.text-amber-200,.text-amber-300,.text-amber-400,.text-\[\#FDE68A\],.text-\[\#E5A93C\] { color:#00BFA5 !important; }
+.border-\[\#E5A93C\] { border-color:rgba(0,191,165,.4) !important; }
+.bg-\[\#1C202B\] { background:#1b3038 !important; }
+.bg-\[\#0B0D11\],.bg-\[\#13161D\] { background:#17142A !important; }
+h1,h2,h3,.font-display { font-family:'Barlow Condensed','Impact','Arial Narrow',sans-serif; text-transform:uppercase; letter-spacing:-.015em; }
+button { transition:background-color .16s ease,border-color .16s ease,color .16s ease,transform .16s ease; }
