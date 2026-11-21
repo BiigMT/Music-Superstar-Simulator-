@@ -2,13 +2,13 @@
 
 @layer base {
   :root {
-    --font-display: 'Syne', sans-serif;
+    --font-display: 'Barlow Condensed', 'Impact', sans-serif;
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-    --career-bg: #08090d;
-    --career-panel: #12141b;
+    --career-bg: #17142A;
+    --career-panel: #22263A;
     --career-line: rgba(255,255,255,.09);
-    --career-gold: #e7b64c;
+    --career-gold: #00BFA5;
   }
   * { box-sizing: border-box; }
   html { background: var(--career-bg); }
@@ -27,7 +27,7 @@
 }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #08090d; }
+::-webkit-scrollbar-track { background: #17142A; }
 ::-webkit-scrollbar-thumb { background: #292c37; border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: #414655; }
 
@@ -44,7 +44,7 @@
 .career-topbar__artist { display:flex; flex-direction:column; min-width:0; gap:3px; }
 .career-topbar__artist strong { max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:700 14px var(--font-display); color:#fff; }
 .career-topbar__artist small { max-width:230px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#8e929e; font-size:10px; }
-.career-topbar__artist small span { color:#d5a94d; padding:0 3px; }
+.career-topbar__artist small span { color:#00BFA5; padding:0 3px; }
 .career-topbar__season { display:flex; flex-direction:column; gap:5px; flex:0 0 auto; }
 .career-topbar__season span { font-size:9px; letter-spacing:.16em; color:#747986; font-weight:700; }
 .career-topbar__season strong { font:600 11px var(--font-mono); color:#d9dbe0; white-space:nowrap; }
@@ -58,7 +58,7 @@
 .career-topbar__controls { display:flex; align-items:center; gap:7px; }
 .career-topbar__controls button { display:inline-flex; align-items:center; justify-content:center; min-width:38px; height:38px; border:1px solid rgba(255,255,255,.1); border-radius:11px; background:#151720; color:#b7bac3; transition:background .18s,border-color .18s,color .18s; }
 .career-topbar__controls button:hover { border-color:rgba(231,182,76,.45); color:#fff; background:#20212a; }
-.career-topbar__controls .career-advance-button { gap:9px; padding:0 15px; background:linear-gradient(135deg,#f0c968,#dba33d); border-color:#e7b64c; color:#17130b; font:700 11px var(--font-sans); white-space:nowrap; }
+.career-topbar__controls .career-advance-button { gap:9px; padding:0 15px; background:linear-gradient(135deg,#f0c968,#079D91); border-color:#00BFA5; color:#17130b; font:700 11px var(--font-sans); white-space:nowrap; }
 .career-topbar__controls .career-advance-button:hover { background:#ffdc82; color:#17130b; }
 
 .career-home { max-width:1280px; margin:0 auto; }
@@ -66,21 +66,21 @@
 .career-hero__image { position:absolute; z-index:-2; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 28%; opacity:.8; }
 .career-hero__shade { position:absolute; z-index:-1; inset:0; background:linear-gradient(90deg,rgba(8,9,13,.97) 0%,rgba(8,9,13,.83) 38%,rgba(8,9,13,.26) 78%,rgba(8,9,13,.2) 100%),linear-gradient(0deg,rgba(8,9,13,.82),transparent 55%); }
 .career-hero__content { position:relative; z-index:1; padding:clamp(22px,4vw,42px); max-width:760px; }
-.career-eyebrow { display:inline-flex; align-items:center; gap:7px; color:#e8c66f; font-size:9px; letter-spacing:.18em; font-weight:800; }
+.career-eyebrow { display:inline-flex; align-items:center; gap:7px; color:#70A7FF; font-size:9px; letter-spacing:.18em; font-weight:800; }
 .career-live-dot { width:6px; height:6px; border-radius:50%; background:#e8b84c; box-shadow:0 0 10px #e8b84c; }
 .career-season { border:1px solid rgba(255,255,255,.15); border-radius:99px; padding:5px 9px; background:rgba(15,16,22,.55); color:#b6b8c1; font:9px var(--font-mono); }
 .career-artist-name { margin:4px 0 0; font:800 clamp(36px,6vw,66px)/1.03 var(--font-display); letter-spacing:-.055em; color:#fff; text-shadow:0 4px 22px rgba(0,0,0,.35); }
 .career-artist-subtitle { margin:11px 0 0; color:#c2c2c8; font-size:12px; }
-.career-artist-subtitle span { color:#dcb34e; padding:0 5px; }
+.career-artist-subtitle span { color:#00BFA5; padding:0 5px; }
 .career-hero__actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
 .career-primary-action,.career-secondary-action { display:inline-flex; align-items:center; justify-content:center; gap:9px; min-height:43px; padding:0 17px; border-radius:12px; font-size:11px; font-weight:700; transition:transform .18s,background .18s; }
-.career-primary-action { background:#e9b94e; color:#1b1508; box-shadow:0 8px 28px rgba(220,165,54,.17); }
+.career-primary-action { background:#00BFA5; color:#1b1508; box-shadow:0 8px 28px rgba(220,165,54,.17); }
 .career-primary-action:hover { background:#ffda7a; transform:translateY(-1px); }
 .career-secondary-action { border:1px solid rgba(255,255,255,.2); background:rgba(18,19,26,.7); color:#f0edf0; backdrop-filter:blur(8px); }
 .career-secondary-action:hover { background:rgba(40,40,49,.88); }
 .career-hero__rank { position:absolute; right:clamp(18px,3vw,36px); bottom:27px; display:flex; flex-direction:column; align-items:flex-end; text-align:right; }
 .career-hero__rank span { color:#c7b68c; font-size:9px; letter-spacing:.18em; font-weight:700; }
-.career-hero__rank strong { color:#f7d67f; font:800 45px/.95 var(--font-display); letter-spacing:-.06em; }
+.career-hero__rank strong { color:#B7FFF0; font:800 45px/.95 var(--font-display); letter-spacing:-.06em; }
 .career-hero__rank small { margin-top:5px; color:#b2b2b9; font-size:10px; }
 .career-stat-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:14px; }
 .career-stat { display:flex; align-items:center; gap:12px; min-width:0; padding:15px 16px; border:1px solid var(--career-line); border-radius:15px; background:linear-gradient(145deg,#151720,#101117); }
@@ -95,7 +95,7 @@
 .career-panel__heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .career-section-kicker { color:#c4a45a; font-size:9px; font-weight:800; letter-spacing:.17em; }
 .career-panel__heading h2 { margin:5px 0 0; color:#f8f6f2; font:700 21px var(--font-display); letter-spacing:-.035em; }
-.career-week-badge { display:grid; place-items:center; width:38px; height:38px; border:1px solid rgba(231,182,76,.28); border-radius:12px; background:rgba(231,182,76,.08); color:#eac66f; font:11px var(--font-mono); }
+.career-week-badge { display:grid; place-items:center; width:38px; height:38px; border:1px solid rgba(231,182,76,.28); border-radius:12px; background:rgba(231,182,76,.08); color:#70A7FF; font:11px var(--font-mono); }
 .career-next-move__lead { margin:22px 0 7px; color:#f3f0e8; font:700 16px var(--font-display); }
 .career-muted-copy { margin:0; color:#9296a2; font-size:11px; line-height:1.7; }
 .career-action-list { display:flex; flex-direction:column; gap:7px; margin-top:20px; }
@@ -104,20 +104,20 @@
 .career-action-list button > span:nth-child(2) { display:flex; flex:1; flex-direction:column; gap:4px; min-width:0; }
 .career-action-list button strong { color:#e8e8eb; font-size:11px; font-weight:700; }
 .career-action-list button small { color:#818592; font-size:10px; }
-.career-action-icon { display:grid; place-items:center; width:34px; height:34px; flex:0 0 auto; border-radius:10px; background:#1d1b16; color:#e3b64f; }
+.career-action-icon { display:grid; place-items:center; width:34px; height:34px; flex:0 0 auto; border-radius:10px; background:#1d1b16; color:#00BFA5; }
 .career-energy { display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:15px; border-top:1px solid rgba(255,255,255,.07); color:#a9abb4; font-size:10px; }
 .career-energy > span { display:flex; align-items:center; gap:5px; white-space:nowrap; }
-.career-energy > span svg { color:#e6bd59; }
+.career-energy > span svg { color:#00BFA5; }
 .career-energy__bars { display:flex; flex:1; gap:4px; }
 .career-energy__bars i { display:block; height:6px; flex:1; border-radius:5px; background:#2b2d36; }
-.career-energy__bars i.is-filled { background:linear-gradient(90deg,#d6a13a,#f4d17b); box-shadow:0 0 8px rgba(231,182,76,.12); }
+.career-energy__bars i.is-filled { background:linear-gradient(90deg,#00BFA5,#B7FFF0); box-shadow:0 0 8px rgba(231,182,76,.12); }
 .career-energy > strong { color:#f0d17b; font:10px var(--font-mono); }
-.career-text-link { display:inline-flex; align-items:center; gap:4px; border:0; background:none; color:#e4bd61; font-size:10px; font-weight:700; }
+.career-text-link { display:inline-flex; align-items:center; gap:4px; border:0; background:none; color:#70A7FF; font-size:10px; font-weight:700; }
 .career-chart-list { margin-top:19px; }
 .career-chart-row { display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.06); }
 .career-chart-row:last-child { border-bottom:0; }
-.career-chart-rank { width:28px; color:#e7c36a; font:700 13px var(--font-mono); }
-.career-chart-cover { display:grid; place-items:center; width:40px; height:40px; flex:0 0 auto; border:1px solid rgba(231,182,76,.24); border-radius:9px; background:linear-gradient(135deg,#3a2b1b,#121319); color:#e8be5d; }
+.career-chart-rank { width:28px; color:#70A7FF; font:700 13px var(--font-mono); }
+.career-chart-cover { display:grid; place-items:center; width:40px; height:40px; flex:0 0 auto; border:1px solid rgba(231,182,76,.24); border-radius:9px; background:linear-gradient(135deg,#3a2b1b,#121319); color:#70A7FF; }
 .career-chart-info { display:flex; flex:1; flex-direction:column; gap:4px; min-width:0; }
 .career-chart-info strong { overflow:hidden; text-overflow:ellipsis; color:#e9e9ed; font-size:11px; white-space:nowrap; }
 .career-chart-info small { color:#858a96; font-size:10px; }
@@ -125,7 +125,7 @@
 .career-vinyl { display:grid; place-items:center; width:62px; height:62px; margin-bottom:14px; border:1px solid rgba(231,182,76,.28); border-radius:50%; background:radial-gradient(circle,#e6b94e 0 5%,#24232a 6% 20%,#0c0d12 21% 100%); color:#e9c45f; }
 .career-empty-music strong { color:#f1eee7; font:700 16px var(--font-display); }
 .career-empty-music p { max-width:260px; margin:7px 0 14px; color:#8e929e; font-size:11px; line-height:1.6; }
-.career-empty-music button { display:inline-flex; align-items:center; gap:6px; border:0; background:none; color:#e8bf60; font-size:10px; font-weight:700; }
+.career-empty-music button { display:inline-flex; align-items:center; gap:6px; border:0; background:none; color:#00C2A8; font-size:10px; font-weight:700; }
 .career-mini-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,.07); }
 .career-mini-summary > div { display:flex; flex-direction:column; gap:5px; min-width:0; }
 .career-mini-summary small,.career-recap-metrics small { color:#858a96; font-size:9px; }
@@ -135,15 +135,15 @@
 .career-recap-metrics > div { display:flex; flex-direction:column; gap:6px; min-width:0; }
 .career-recap-metrics strong { overflow:hidden; text-overflow:ellipsis; color:#eee; font:700 13px var(--font-mono); white-space:nowrap; }
 .career-highlight { display:flex; gap:8px; margin:8px 0 0; color:#b5b7c0; font-size:10px; line-height:1.6; }
-.career-highlight span { color:#e5b951; }
+.career-highlight span { color:#00BFA5; }
 .career-world-line { display:flex; align-items:flex-start; gap:11px; margin-top:19px; }
-.career-world-icon { display:grid; place-items:center; width:34px; height:34px; flex:0 0 auto; border:1px solid rgba(255,255,255,.07); border-radius:10px; background:#1b1d25; color:#d7b45c; }
+.career-world-icon { display:grid; place-items:center; width:34px; height:34px; flex:0 0 auto; border:1px solid rgba(255,255,255,.07); border-radius:10px; background:#1b1d25; color:#00BFA5; }
 .career-world-line > div { display:flex; flex-direction:column; gap:5px; min-width:0; }
 .career-world-line strong { color:#e7e7eb; font-size:11px; }
 .career-world-line small { color:#8d919d; font-size:10px; line-height:1.55; overflow-wrap:anywhere; }
 .career-career-footer { display:flex; justify-content:space-between; gap:10px; margin-top:20px; padding-top:14px; border-top:1px solid rgba(255,255,255,.07); color:#a0a4ae; font-size:9px; }
 .career-career-footer span { display:flex; align-items:center; gap:5px; }
-.career-career-footer svg { color:#dcb65c; }
+.career-career-footer svg { color:#00BFA5; }
 
 @media (max-width: 1050px) {
   .career-topbar { gap:12px; }
@@ -201,13 +201,69 @@
 /* Analog console range controls */
 input[type="range"].console-fader { -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer; }
 input[type="range"].console-fader::-webkit-slider-runnable-track { height:6px; border-radius:3px; background:#232834; border:1px solid rgba(255,255,255,.06); }
-input[type="range"].console-fader::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; height:18px; width:12px; border-radius:2px; background:#e5a93c; border:1px solid #fde68a; margin-top:-7px; box-shadow:0 2px 6px rgba(0,0,0,.5); }
+input[type="range"].console-fader::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; height:18px; width:12px; border-radius:2px; background:#00BFA5; border:1px solid #B7FFF0; margin-top:-7px; box-shadow:0 2px 6px rgba(0,0,0,.5); }
 input[type="range"].console-fader:focus-visible { outline:none; }
-input[type="range"].console-fader:focus-visible::-webkit-slider-thumb { box-shadow:0 0 0 2px #0b0d11,0 0 0 4px #e5a93c; }
+input[type="range"].console-fader:focus-visible::-webkit-slider-thumb { box-shadow:0 0 0 2px #0b0d11,0 0 0 4px #00BFA5; }
 
 .career-mobile-nav { position:fixed; z-index:40; inset:auto 0 0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:3px; padding:8px 7px calc(8px + env(safe-area-inset-bottom)); border-top:1px solid rgba(255,255,255,.09); background:rgba(10,11,15,.97); backdrop-filter:blur(18px); }
 .career-mobile-nav button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-width:0; min-height:48px; border:1px solid transparent; border-radius:11px; background:transparent; color:#777c89; font:600 9px var(--font-sans); }
-.career-mobile-nav button.is-active { border-color:rgba(231,182,76,.14); background:rgba(231,182,76,.08); color:#e9c36a; }
+.career-mobile-nav button.is-active { border-color:rgba(231,182,76,.14); background:rgba(231,182,76,.08); color:#00C2A8; }
 .career-mobile-more { position:fixed; z-index:41; right:10px; bottom:calc(76px + env(safe-area-inset-bottom)); display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; width:min(290px,calc(100vw - 20px)); padding:10px; border:1px solid rgba(255,255,255,.12); border-radius:16px; background:rgba(17,18,24,.98); box-shadow:0 18px 50px rgba(0,0,0,.55); backdrop-filter:blur(18px); }
 .career-mobile-more button { display:flex; align-items:center; gap:9px; min-height:44px; padding:0 10px; border:1px solid rgba(255,255,255,.06); border-radius:10px; background:#11131a; color:#b2b5bf; font-size:10px; font-weight:600; text-align:left; }
 .career-mobile-more button.is-active { border-color:rgba(231,182,76,.28); color:#f1cc70; background:#201c14; }
+
+
+/* FM-inspired dark purple / slate / teal visual system */
+:root {
+  --career-bg:#17142A;
+  --career-panel:#22263A;
+  --career-line:rgba(160,174,211,.13);
+  --career-gold:#00BFA5;
+  --font-display:'Barlow Condensed','Impact','Arial Narrow',sans-serif;
+}
+body,.min-h-screen { background:#17142A !important; }
+.career-topbar { background:rgba(25,21,47,.96); border-color:rgba(138,153,196,.14); }
+.career-brand-mark { border-color:rgba(0,191,165,.4); background:linear-gradient(145deg,#193c45,#20243b); color:#70a7ff; }
+.career-brand-mark span { color:#00bfa5; }
+.career-topbar__artist small span { color:#00bfa5; }
+.career-topbar__controls .career-advance-button { background:linear-gradient(135deg,#00c2a8,#079d91); border-color:#00bfa5; color:#101a25; }
+.career-topbar__controls .career-advance-button:hover { background:#4be0c7; color:#101a25; }
+.career-hero { background:#22263a; border-color:rgba(150,165,205,.16); }
+.career-hero__image { width:44%; right:auto; object-fit:contain; object-position:center bottom; opacity:1; }
+.career-hero__shade { background:linear-gradient(90deg,rgba(34,38,58,.08) 0%,rgba(34,38,58,.25) 31%,rgba(34,38,58,.95) 49%,#22263a 100%),linear-gradient(0deg,rgba(23,20,42,.8),transparent 55%); }
+.career-hero__content { margin-left:36%; padding-top:32px; }
+.career-artist-name { font-family:var(--font-display); font-weight:800; text-transform:uppercase; letter-spacing:-.025em; }
+.career-hero__rank strong { color:#70a7ff; }
+.career-stat,.career-panel { background:linear-gradient(145deg,#252a40,#20243a); border-color:rgba(150,165,205,.13); }
+.career-stat__icon { background:rgba(0,191,165,.09); border-color:rgba(0,191,165,.2); color:#00bfa5; }
+.career-section-kicker,.career-eyebrow { color:#70a7ff; }
+.career-live-dot { background:#00bfa5; box-shadow:0 0 10px #00bfa5; }
+.career-primary-action { background:linear-gradient(135deg,#00c2a8,#079d91); color:#101a25; box-shadow:0 8px 25px rgba(0,191,165,.14); }
+.career-primary-action:hover { background:#4be0c7; }
+.career-secondary-action { background:rgba(25,29,47,.78); border-color:rgba(145,160,202,.2); }
+.career-action-list button { background:#1b2033; border-color:rgba(145,160,202,.1); }
+.career-action-icon { background:rgba(0,191,165,.1); color:#00bfa5; }
+.career-week-badge,.career-chart-cover { background:rgba(112,167,255,.1); border-color:rgba(112,167,255,.24); color:#70a7ff; }
+.career-energy__bars i.is-filled { background:linear-gradient(90deg,#00a995,#49dfc6); box-shadow:0 0 8px rgba(0,191,165,.15); }
+.career-text-link,.career-empty-music button { color:#70a7ff; }
+.career-vinyl { border-color:rgba(0,191,165,.25); color:#00bfa5; background:radial-gradient(circle,#00bfa5 0 5%,#24263a 6% 20%,#14182a 21% 100%); }
+.career-world-icon { color:#70a7ff; background:#1b2033; }
+.career-career-footer svg { color:#00bfa5; }
+.career-mobile-nav { background:rgba(25,21,47,.98); border-color:rgba(145,160,202,.16); }
+.career-mobile-nav button.is-active { background:rgba(0,191,165,.1); border-color:rgba(0,191,165,.18); color:#00c2a8; }
+.career-mobile-more { background:rgba(30,31,53,.98); border-color:rgba(145,160,202,.18); }
+.career-mobile-more button.is-active { border-color:rgba(0,191,165,.3); color:#00c2a8; background:#1b3038; }
+@media (max-width:760px) {
+  .career-hero { min-height:290px; }
+  .career-hero__image { width:54%; object-position:center bottom; }
+  .career-hero__shade { background:linear-gradient(90deg,rgba(34,38,58,.05),rgba(34,38,58,.3) 37%,rgba(34,38,58,.95) 61%,#22263a),linear-gradient(0deg,rgba(23,20,42,.82),transparent 70%); }
+  .career-hero__content { margin-left:34%; padding:22px 13px 20px 0; }
+  .career-artist-name { font-size:clamp(30px,8.8vw,43px); }
+  .career-hero__rank { right:14px; bottom:13px; }
+  .career-hero__rank strong { font-size:27px; }
+}
+@media (max-width:380px) {
+  .career-hero__content { margin-left:30%; }
+  .career-hero__image { width:56%; }
+  .career-artist-name { font-size:29px; }
+}
