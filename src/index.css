@@ -2,13 +2,13 @@
 
 @layer base {
   :root {
-    --font-display: 'Barlow Condensed', 'Impact', sans-serif;
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Syne', 'Impact', sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-    --career-bg: #17142A;
-    --career-panel: #22263A;
+    --career-bg: #0D0D0F;
+    --career-panel: #18181C;
     --career-line: rgba(255,255,255,.09);
-    --career-gold: #00BFA5;
+    --career-gold: #F5A623;
   }
   * { box-sizing: border-box; }
   html { background: var(--career-bg); }
@@ -401,4 +401,81 @@ button { transition:background-color .16s ease,border-color .16s ease,color .16s
   .ms-shortcuts button { padding:9px 2px; }
   .ms-shortcuts strong { font-size:8px; }
   .ms-time-actions button { font-size:7px; }
+}
+
+
+/* SOUNDSTAGE visual system — sharp editorial studio hardware */
+:root {
+  --ss-bg:#0D0D0F; --ss-panel:#17171B; --ss-panel-2:#1D1D22;
+  --ss-line:rgba(255,255,255,.11); --ss-muted:#85858F;
+  --ss-amber:#F5A623; --ss-amber-soft:rgba(245,166,35,.12);
+}
+html,body,#root { width:100%; min-height:100%; background:var(--ss-bg); }
+body { color:#F4F4F6; font-family:'Inter',sans-serif; }
+.soundstage-app { height:100dvh; min-height:100dvh; overflow:hidden; background:var(--ss-bg)!important; }
+.career-topbar { min-height:70px; gap:14px; padding:9px clamp(12px,2.4vw,28px); background:rgba(13,13,15,.97); border-bottom:1px solid var(--ss-line); backdrop-filter:blur(16px); }
+.career-brand-mark { width:34px;height:34px;border-radius:3px;border:1px solid rgba(245,166,35,.65);background:#17130d;color:var(--ss-amber);font:800 13px 'Syne',sans-serif; }
+.career-topbar__artist strong { font:800 16px 'Syne',sans-serif; letter-spacing:-.04em; }
+.career-topbar__artist small { font:500 10px 'Inter',sans-serif; }
+.career-topbar__season span,.career-topbar__metrics small { font:700 8px 'JetBrains Mono',monospace; letter-spacing:.12em; text-transform:uppercase; }
+.career-topbar__season strong,.career-topbar__metrics strong { font:600 11px 'JetBrains Mono',monospace; }
+.career-topbar__controls button { min-width:34px;height:34px;border-radius:3px;background:#17171B;border:1px solid var(--ss-line); }
+.career-topbar__controls .career-advance-button { border-radius:3px;border-color:var(--ss-amber);background:var(--ss-amber);color:#100e09;font:800 10px 'JetBrains Mono',monospace; }
+.soundstage-playfield { max-width:1500px; gap:16px; padding:14px 18px 18px; }
+.soundstage-playfield aside { width:190px; gap:3px; }
+.soundstage-playfield aside button { min-height:37px;border-radius:3px!important;border:1px solid transparent!important;padding:8px 11px!important;font:600 11px 'Inter',sans-serif!important; }
+.soundstage-playfield aside button.bg-\[\#1C202B\],.soundstage-playfield aside button.is-active { background:var(--ss-amber-soft)!important;color:#ffd58b!important;border-color:rgba(245,166,35,.42)!important; }
+.soundstage-playfield aside button svg { color:#8c8c96!important; }
+.soundstage-playfield aside button.bg-\[\#1C202B\] svg { color:var(--ss-amber)!important; }
+.soundstage-main { min-width:0; height:calc(100dvh - 106px); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#3b3b42 transparent; }
+.soundstage-main > * { max-width:100%; }
+.soundstage-main section,.soundstage-main article { border-radius:4px!important; }
+.soundstage-main .rounded-2xl,.soundstage-main .rounded-xl,.soundstage-main .rounded-lg { border-radius:4px!important; }
+.soundstage-main .shadow-xl,.soundstage-main .shadow-lg { box-shadow:none!important; }
+.soundstage-main .bg-\[\#18181C\],.soundstage-main .bg-\[\#17142A\],.soundstage-main .bg-\[\#22263A\] { background:#17171B!important; }
+.soundstage-main .border-white\/10,.soundstage-main .border-white\/5 { border-color:var(--ss-line)!important; }
+.soundstage-main h1,.soundstage-main h2,.soundstage-main h3 { font-family:'Syne',sans-serif!important; letter-spacing:-.035em; }
+.soundstage-main label,.soundstage-main .font-mono { font-family:'JetBrains Mono',monospace!important; }
+.soundstage-main input,.soundstage-main select,.soundstage-main textarea { border-radius:3px!important;background:#0D0D0F!important;border-color:#35353c!important; }
+.soundstage-main button { transition:background .12s,border-color .12s,color .12s; }
+.soundstage-main button:active { transform:translateY(1px); }
+.career-mobile-nav { z-index:50; border-top:1px solid var(--ss-line); background:rgba(13,13,15,.98); padding:5px 4px max(5px,env(safe-area-inset-bottom)); }
+.career-mobile-nav button { min-height:45px;gap:4px;color:#777780;font:600 9px 'JetBrains Mono',monospace; }
+.career-mobile-nav button.is-active { color:var(--ss-amber); }
+.career-mobile-nav button.is-active svg { filter:drop-shadow(0 0 5px rgba(245,166,35,.25)); }
+.career-mobile-more { bottom:calc(57px + env(safe-area-inset-bottom)); border:1px solid var(--ss-line); border-radius:4px; background:#17171B; box-shadow:0 15px 40px #0009; }
+.career-mobile-more button { border-radius:3px;color:#c4c4ca;font:600 11px 'Inter',sans-serif; }
+.career-mobile-more button.is-active { background:var(--ss-amber-soft);color:var(--ss-amber); }
+.ms-dashboard { gap:9px!important; }
+.ms-artist-card,.ms-info-tile,.ms-news-strip,.ms-enrollment-card,.ms-shortcuts button,.ms-time-card,.ms-content-card { border-radius:4px!important;box-shadow:none!important; }
+.ms-artist-card { min-height:230px!important; }
+.ms-artist-details h1 { font-family:'Syne',sans-serif!important; letter-spacing:-.06em!important; }
+.ms-info-tile,.ms-time-card,.ms-content-card { background:#17171B!important; }
+.ms-action-primary { border-radius:3px!important;background:var(--ss-amber)!important;color:#15110a!important; }
+.ms-action-secondary { border-radius:3px!important;background:#202024!important; }
+@media(max-width:1023px) {
+ .soundstage-app { height:100dvh; }
+ .career-topbar { min-height:66px; padding:8px 11px; gap:8px; }
+ .career-topbar__identity { min-width:0;flex:1 1 auto; }
+ .career-topbar__season { display:none; }
+ .career-topbar__metrics { gap:9px; }
+ .career-topbar__metrics > div:nth-child(2) { display:none; }
+ .career-topbar__metrics small { font-size:7px; }
+ .career-topbar__metrics strong { font-size:10px; }
+ .career-topbar__controls button:not(.career-advance-button) { display:none; }
+ .career-topbar__controls .career-advance-button { height:32px;padding:0 9px;gap:5px;font-size:8px; }
+ .soundstage-playfield { padding:10px 10px 0!important;gap:0!important; }
+ .soundstage-main { height:calc(100dvh - 125px);padding-bottom:8px; }
+ .career-mobile-nav { position:fixed;left:0;right:0;bottom:0; }
+ .soundstage-main .ms-lower-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .soundstage-main .ms-dashboard { gap:8px!important; }
+ .soundstage-main .ms-artist-card { min-height:185px!important; }
+ .soundstage-main .ms-artist-details { padding:12px 10px 10px 2px!important; }
+ .soundstage-main .ms-artist-details h1 { font-size:clamp(22px,7vw,32px)!important; }
+}
+@media(max-width:430px) {
+ .career-topbar__metrics > div:nth-child(3) { display:none; }
+ .soundstage-main .ms-lower-grid { grid-template-columns:minmax(0,1fr); }
+ .soundstage-main .ms-artist-card { min-height:170px!important; }
+ .soundstage-main .ms-artist-actions button { min-height:28px!important; }
 }
