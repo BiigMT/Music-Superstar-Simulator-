@@ -6,6 +6,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // GitHub Pages serves this project from a repository subpath.
+    base: '/Music-Superstar-Simulator-/',
     plugins: [
       react(),
       tailwindcss(),
@@ -16,9 +18,7 @@ export default defineConfig(() => {
         name: 'copy-unbundled-src-assets',
         apply: 'build',
         closeBundle(error?: Error): void {
-          if (error) {
-            return;
-          }
+          if (error) return;
           const distDir = path.resolve(__dirname, 'dist');
           const srcAssets = path.resolve(__dirname, 'src/assets');
           const distAssets = path.resolve(distDir, 'src/assets');
@@ -29,9 +29,7 @@ export default defineConfig(() => {
       },
     ],
     resolve: {
-      alias: {
-        '@': path.resolve(__dirname, '.'),
-      },
+      alias: {'@': path.resolve(__dirname, '.')},
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
