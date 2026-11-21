@@ -238,7 +238,67 @@ render();
  var navItems=[['home','Career','⭐'],['studio','Studio','🎛️'],['phone','Phone','📱'],['charts','Charts','📈'],['career','Industry','💼'],['goals','Goals','🏆']];
  render=function(){if(!started){return oldRender()}chk();$('d').textContent='Week '+(S.wk+1);$('t').textContent=new Date(2026,0,5+S.wk*7).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});$('m').textContent='$'+fmt(S.money);$('e').textContent='Energy '+S.energy;$('nav').innerHTML=navItems.map(function(t){return '<button class="'+(U.tab===t[0]?'on':'')+'" data-a="peTab" data-p="'+t[0]+'"><span>'+t[2]+'</span>'+t[1]+'</button>'}).join('');var view={home:careerDashboard,studio:studio,phone:phoneView,charts:charts,career:career,goals:goals};var keep=$('main').scrollTop;$('main').innerHTML=(view[U.tab]||careerDashboard)()+(U.app?sheet():'');$('main').scrollTop=keep;try{localStorage.setItem('pe_save',JSON.stringify(S));syncActive()}catch(e){}};
  document.addEventListener('click',function(e){var t=e.target.closest('[data-a]');if(!t)return;var a=t.dataset.a,p=t.dataset.p;if(a==='peTab'){e.preventDefault();e.stopImmediatePropagation();U.tab=p;U.app=null;render();return}if(a==='tab'&&p){e.preventDefault();e.stopImmediatePropagation();U.tab=p;U.app=null;render();return}if(a==='app'){e.preventDefault();e.stopImmediatePropagation();U.app=p;render();return}if(a==='close'){e.preventDefault();e.stopImmediatePropagation();U.app=null;render();return}if(a==='gateSaves'){e.preventDefault();e.stopImmediatePropagation();gate.style.display='flex';savePanel.style.display='block';newPanel.style.display='none';paintSlots();return}if(a==='gateNewCareer'){e.preventDefault();e.stopImmediatePropagation();gate.style.display='flex';newPanel.style.display='block';savePanel.style.display='none';return}if(a==='next'){setTimeout(function(){syncActive()},0)}},true);
- migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(savedActive>0&&slots()[savedActive-1])selectedSlot=savedActive;
+ 
+/* Platinum Era interactive career expansion */
+var peBaseStudio=studio,peBaseHome=home;
+function peEsc(v){return String(v||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+studio=function(){
+ var out=peBaseStudio();
+ var create='<div class="box"><h3>Build your next release</h3><p class="mut">Give the track a title and choose its vibe. Your choices influence quality and buzz.</p><input id="peTrackTitle" maxlength="42" placeholder="Song title (or leave blank for a generated title)" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ffffff30;background:#ffffff12;color:white;font:inherit;margin:8px 0"><div class="row"><label class="mut" for="peTrackMood">Vibe</label><select id="peTrackMood" style="flex:1;padding:10px;border-radius:10px;background:#251d4c;color:white;border:1px solid #ffffff30"><option value="confident">Confident</option><option value="heartbreak">Heartbreak</option><option value="party">Party</option><option value="motivational">Motivational</option><option value="street">Street</option><option value="reflective">Reflective</option></select></div><div class="mut">Writing costs 20 energy. Recording and release costs are shown on each track.</div></div>';
+ out=out.replace(/<div class="box"><h3>Write a song<\/h3>/,create+'<div class="box"><h3>Choose genre & write<\/h3>');
+ out=out.replace(/data-a="rec" data-p="(\\d+)"/g,function(all,i){return 'data-a="rec" data-p="'+i+'|standard"'});
+ var upgrades='<div class="box"><h3>Studio upgrades</h3><p class="mut">Improve future recording sessions. These are permanent career investments.</p><div class="row"><div><b>Bedroom setup</b><div class="mut">+2 recording quality · $250</div></div>'+btn("upgrade","Buy", "bedroom","sm")+'</div><div class="row"><div><b>Home studio</b><div class="mut">+5 recording quality · $800</div></div>'+btn("upgrade","Buy","home","sm")+'</div><div class="row"><div><b>Professional studio</b><div class="mut">+9 recording quality · $2,000</div></div>'+btn("upgrade","Buy","pro","sm")+'</div></div>';
+ return create+out+upgrades;
+};
+if(typeof TABS!=="undefined"){var peStudioTab=TABS.find(function(t){return t[0]==="studio"});if(peStudioTab)peStudioTab[3]=studio;}
+home=function(){
+ var out=peBaseHome();
+ var actions='<div class="box"><h3>Make moves this week</h3><p class="mut">Choose how to spend your energy before advancing the week.</p><div class="row"><div><b>Practice</b><div class="mut">10 energy · +skill</div></div>'+btn("practice","Train","","sm")+'</div><div class="row"><div><b>Side hustle</b><div class="mut">10 energy · earn cash once per week</div></div>'+btn("shift","Work","","sm")+'</div><div class="row"><div><b>Network</b><div class="mut">15 energy · make an industry connection</div></div>'+btn("network","Connect","","sm")+'</div><div class="row"><div><b>Rest</b><div class="mut">Recover 25 energy once per week</div></div>'+btn("rest","Rest","","sm")+'</div></div>';
+ var log=(S.eventsLog||[]).slice(0,3);
+ var news='<div class="box"><h3>Career moments</h3>'+ (log.length?log.map(function(x){return '<div class="row mut">'+peEsc(x)+'</div>'}).join(""):'<p class="mut">Your career moments will appear here as you make moves and advance weeks.</p>')+'</div>';
+ out=out.replace(/<div class="box"><h3>Goals<\/h3>/,actions+news+'<div class="box"><h3>Goals<\/h3>');
+ return out;
+};
+if(typeof TABS!=="undefined"){var peHomeTab=TABS.find(function(t){return t[0]==="home"});if(peHomeTab)peHomeTab[3]=home;}
+A.write=function(){
+ if(!spend(0,20))return;
+ var titleEl=document.getElementById("peTrackTitle"),moodEl=document.getElementById("peTrackMood");
+ var title=(titleEl&&titleEl.value.trim())||pick(W1)+" "+pick(W2),mood=moodEl?moodEl.value:"confident";
+ var bonus={confident:3,heartbreak:4,party:2,motivational:5,street:4,reflective:3}[mood]||0;
+ S.songs.push({t:title.slice(0,42),g:U.g,q:Math.max(1,S.skill+rnd(0,8)+bonus),st:0,age:0,wk:0,tot:0,mood:mood,features:[],rollout:{}});
+ S.news.unshift(S.name+' started working on "'+title.slice(0,42)+'"');
+ toast("Song idea saved to Studio");
+};
+A.rec=function(p){
+ var parts=String(p||"0").split("|"),i=+parts[0],tier=parts[1]||"standard",s=S.songs[i];
+ if(!s||s.st!==0){toast("This track is not ready to record");return}
+ var cost=tier==="premium"?250:100,energy=tier==="premium"?35:25;
+ if(!spend(cost,energy))return;
+ var upgrade=S.studioLevel||0,boost=(tier==="premium"?rnd(18,28):rnd(8,18))+upgrade;
+ s.q+=boost;s.st=1;s.recording=tier;S.skill=Math.min(100,S.skill+(tier==="premium"?2:1));
+ toast((tier==="premium"?"Premium":"Standard")+" recording complete · quality "+s.q);
+};
+A.practice=function(){if(!spend(0,10))return;var gain=rnd(1,3);S.skill=Math.min(100,S.skill+gain);S.buzz+=Math.random()<.25?1:0;toast("Practice complete · +"+gain+" skill")};
+A.shift=function(){S.weeklyActions=S.weeklyActions||{};if(S.weeklyActions.shift){toast("You already worked this week");return}if(!spend(0,10))return;S.weeklyActions.shift=1;var pay=rnd(60,110);S.money+=pay;toast("Side hustle earned $"+fmt(pay))};
+A.network=function(){if(!spend(25,15))return;S.con=S.con||[];var names=["Local producer","Campus DJ","Radio intern","Studio engineer","Promoter","Independent manager"],name=pick(names);if(!S.con.includes(name))S.con.push(name);S.buzz+=rnd(1,4);S.news.unshift(S.name+" connected with "+name);toast("Connection made: "+name)};
+A.rest=function(){S.weeklyActions=S.weeklyActions||{};if(S.weeklyActions.rest){toast("You already rested this week");return}S.weeklyActions.rest=1;S.energy=Math.min(100,S.energy+25);toast("Rested · energy "+S.energy)};
+A.upgrade=function(p){var d={bedroom:[250,2],home:[800,5],pro:[2000,9]}[p];if(!d)return;S.studioLevel=S.studioLevel||0;var levels={bedroom:1,home:2,pro:3};if(S.studioLevel>=levels[p]){toast("You already own this or a better setup");return}if(!spend(d[0],0))return;S.studioLevel=levels[p];S.studioQuality=d[1];toast("Studio upgraded · +"+d[1]+" recording quality")};
+var peOldNext=A.next;
+A.next=function(){
+ S.weeklyActions={};
+ peOldNext();
+ S.eventsLog=S.eventsLog||[];
+ var released=S.songs.filter(function(s){return s.st===2});
+ if(Math.random()<.58){
+  var event;
+  if(released.length&&Math.random()<.32){var song=pick(released),gain=rnd(80,420);song.wk+=gain;song.tot+=gain;S.buzz+=rnd(1,3);event='A local playlist picked up "'+song.t+'" (+ '+fmt(gain)+' streams).'}
+  else if(Math.random()<.5){var cash=rnd(50,180);S.money+=cash;event='A small paid opportunity came through (+$'+fmt(cash)+').'}
+  else{var fan=rnd(3,18);var platform=pick(PL)[0];S.f[platform]+=fan;event='A clip reached new listeners (+ '+fan+' '+platform+' followers).'}
+  S.eventsLog.unshift(event);S.news.unshift(event);toast(event);
+ }else{var quiet="A quiet week. Keep building your catalogue and connections.";S.eventsLog.unshift(quiet)}
+ S.eventsLog=S.eventsLog.slice(0,8);S.news=S.news.slice(0,8);
+};
+migrate();var savedActive=Number(localStorage.getItem('pe_active_slot'));if(savedActive>0&&slots()[savedActive-1])selectedSlot=savedActive;
  showGate();
 })();
 </script>
