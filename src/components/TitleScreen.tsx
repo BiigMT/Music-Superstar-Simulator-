@@ -101,7 +101,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                   fontSize="50"
                   letterSpacing="-1.5"
                 >
-                  PLATINUM
+                  MUSIC
                 </text>
                 <text
                   x="92"
