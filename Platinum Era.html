@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Platinum Era</title>
+<style>
+:root{--bg:#231a4f;--card:rgba(10,12,24,.74);--card2:rgba(255,255,255,.14);--ink:#fff;--mute:#aaa5cf;--teal:#2dd4bf;--gold:#f5c542;--red:#ef4444;--grn:#22c55e;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--ink);font:15px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif}
+body{display:flex;flex-direction:column;max-width:480px;margin:0 auto}
+header{padding:12px 16px 8px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff14}
+header b{font-size:18px}header small{color:var(--mute);display:block}
+.hr{text-align:right;font-weight:700;color:var(--gold)}.hr small{color:var(--teal)}
+main{flex:1;overflow-y:auto;padding:14px 12px 20px;position:relative;margin:6px 8px;border-radius:28px;background:linear-gradient(170deg,#15383a 0%,#3d6b66 40%,#2a3f78 75%,#4a2c7a 100%)}
+nav{display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,255,255,.12);margin:0 8px 8px;border-radius:26px}
+nav button{background:none;border:0;color:var(--mute);padding:9px 0 7px;font-size:11px;cursor:pointer}
+nav button span{display:block;font-size:20px}nav button.on{color:var(--teal)}
+.box{background:var(--card);backdrop-filter:blur(10px);border-radius:20px;padding:14px;margin-bottom:12px}
+.box h3{font-size:15px;margin-bottom:6px}.mut{color:var(--mute);font-size:13px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0}
+.btn{background:var(--teal);color:#06231f;border:0;border-radius:12px;padding:10px 14px;font-weight:700;font-size:14px;cursor:pointer}
+.btn.alt{background:var(--card2);color:#fff}.btn.sm{padding:7px 10px;font-size:13px}.btn:disabled{opacity:.4}
+.btn.wide{width:100%;padding:14px;font-size:16px;background:var(--gold);color:#2a1d00}
+.big{font-size:28px;font-weight:800}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:10px}
+.stats div{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid #ffffff1a}.stats div:last-child{border:0}
+.stats span{margin-left:auto;color:#ddd}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--card2);border-radius:12px;text-align:center;padding:12px 4px}.tile b{font-size:22px;display:block}.tile small{color:var(--mute)}
+.chip{display:inline-block;padding:7px 12px;border-radius:20px;background:var(--card2);margin:0 6px 6px 0;font-size:13px;cursor:pointer;border:0;color:#fff}.chip.on{background:var(--teal);color:#06231f;font-weight:700}
+.ch{display:grid;grid-template-columns:26px 44px 1fr auto;gap:10px;padding:8px 6px;border-radius:10px;align-items:center}
+.ch.me{background:#f5c54226;outline:1px solid var(--gold)}.ch i{color:var(--mute);font-style:normal;font-weight:700}
+.ch small{display:block;color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 6px;padding:6px 0}
+.app{background:none;border:0;color:#fff;font-size:12px;cursor:pointer;text-align:center}
+.ico{width:100%;max-width:58px;aspect-ratio:1;margin:0 auto 5px;border-radius:15px;display:grid;place-items:center;font-size:26px;position:relative}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--red);border-radius:50%;min-width:21px;height:21px;font-size:12px;font-weight:700;display:grid;place-items:center}
+.dock{display:grid;grid-template-columns:repeat(4,1fr);background:#ffffff1f;border-radius:24px;padding:10px 6px;margin-top:14px}
+.sheet{position:absolute;inset:0;background:var(--bg);border-radius:28px;padding:14px;overflow-y:auto;z-index:5}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}.top h2{font-size:20px}
+.top .bk{background:none;border:0;color:var(--teal);font-size:30px;cursor:pointer}
+.top .ico{width:40px;margin:0;font-size:20px;border-radius:11px}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));max-width:448px;margin:auto;background:#fff;color:#111;padding:11px 14px;border-radius:12px;font-weight:600;text-align:center;z-index:9}
+.unread::before{content:"● ";color:#4a8bff}
+.cov{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font-size:26px;flex:none}.steps{display:flex;gap:6px;margin-top:10px}.steps i{flex:1;height:6px;border-radius:3px;background:#ffffff26}.steps i.on{background:var(--teal)}.bar{height:6px;border-radius:3px;background:#ffffff26;margin-top:8px}.bar u{display:block;height:100%;border-radius:3px}.lab{display:flex;justify-content:space-between;font-size:11px;color:var(--mute);margin-top:4px}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+</style></head><body>
+<header><div><b id="d"></b><small id="t"></small></div><div class="hr"><div id="m"></div><small id="e"></small></div></header>
+<main id="main"></main>
+<nav id="nav"></nav>
+<script>
+const $=s=>document.getElementById(s),rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1)),pick=a=>a[rnd(0,a.length-1)],fmt=n=>Math.round(n).toLocaleString();
+const F=["Nova","Kid","Lyra","Dre","Juno","Mila","Sol","Vanta","Echo","Rue","Zane","Aria","Koa","Ivy"],L=["Vale","Mirage","Fox","Valentine","Park","Rae","Ortega","Lane","Cross","Hollow","Stone","Moon"];
+const W1=["Neon","Midnight","Golden","Broken","Electric","Paper","Silver","Late","Wild","Slow"],W2=["Hearts","Summer","Skyline","Static","Runaway","Gravity","Honey","Signal","Fever","Daylight"];
+const GEN=["Pop","Hip-Hop","Rock","R&B","Indie"],REG=["USA","UK","Europe","Asia","LatAm","Oceania"];
+const PL=[["yt","Biig MT","subscribers","#ef2b2b"],["ig","biigmt","followers","#e03b8b"],["x","@biigmt","followers","#fff"],["tt","TicTok","followers","#2dd4d4"]];
+const mkR=()=>({a:pick(F)+" "+pick(L),t:pick(W1)+" "+pick(W2),s:rnd(3000,90000)});
+const fresh=()=>({wk:0,money:300,energy:100,skill:10,buzz:0,name:"Biig MT",f:{yt:0,ig:0,x:0,tt:0},st:{sd:0,az:0,pm:0},reg:{USA:3,UK:3,Europe:3,Asia:3,LatAm:3,Oceania:3},songs:[],label:0,peak:0,gd:{},fb:5,con:[],news:["Welcome to Platinum Era. Write a song to begin."],
+ rivals:Array.from({length:40},mkR),mail:[{id:1,from:"Nova Records",subj:"We heard your demo",body:"Come back when you have 300 followers.",read:0}]});
+let S;try{S=JSON.parse(localStorage.getItem("pe_save"))||fresh()}catch(e){S=fresh()}
+const U={tab:"home",app:null,mail:null,g:"Pop"};
+const tf=()=>Object.values(S.f).reduce((a,b)=>a+b,0),ts=()=>Object.values(S.st).reduce((a,b)=>a+b,0);
+const title=()=>{const n=ts();return n<5e3?"Unknown":n<5e4?"Local act":n<5e5?"Rising star":n<5e6?"Star":"Superstar"};
+function toast(x){const d=document.createElement("div");d.className="toast";d.textContent=x;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function spend(m,e){if(S.money<m){toast("Not enough money");return 0}if(S.energy<e){toast("Too tired. Start the next week.");return 0}S.money-=m;S.energy-=e;return 1}
+const GO=[["Release your first song",()=>S.songs.some(s=>s.st==2),200],["Reach 500 followers",()=>tf()>=500,300],["Enter the Hot 50",()=>S.peak&&S.peak<=50,500],["Sign a label deal",()=>S.label,1000],["Reach the top 10",()=>S.peak&&S.peak<=10,2000],["Earn $10,000",()=>S.money>=1e4,1500],["Reach number one",()=>S.peak===1,1e4]];
+function chk(){GO.forEach((g,i)=>{if(!S.gd[i]&&g[1]()){S.gd[i]=1;S.money+=g[2];toast("Goal done: "+g[0]+" (+$"+fmt(g[2])+")")}});
+ if(tf()>=300&&!S.mail.some(m=>m.id===2)){S.mail.push({id:2,from:"Nova Records",subj:"Contract offer",body:"We offer a $2,000 advance. We take 50% of royalties and add a promo push.",read:0,offer:1});toast("New mail: label offer")}}
+function chart(){return[...S.rivals.map(r=>({a:r.a,t:r.t,s:r.s})),...S.songs.filter(s=>s.st==2).map(s=>({a:S.name,t:s.t,s:s.wk,me:1}))].sort((a,b)=>b.s-a.s)}
+function next(){S.wk++;S.energy=100;let inc=0;const fans=tf();
+ S.songs.filter(s=>s.st==2).forEach(s=>{s.age++;const w=Math.round(s.q*(20+fans*.6+S.buzz*15)*Math.exp(-s.age/9)*(S.label?1.5:1)*(.8+Math.random()*.4));s.wk=w;s.tot+=w;S.st.sd+=w*.45|0;S.st.az+=w*.3|0;S.st.pm+=w*.25|0;inc+=w*.004*(S.label?.5:1)});
+ S.money=Math.max(0,S.money+inc-60);
+ S.rivals.forEach(r=>{r.s=Math.round(r.s*(.88+Math.random()*.2));if(r.s<2500)Object.assign(r,mkR())});
+ const hot=S.songs.some(s=>s.st==2&&s.wk>500);REG.forEach(k=>S.reg[k]=Math.max(0,Math.min(100,S.reg[k]+(hot?rnd(0,2):-1))));
+ const c=chart();S.news.unshift(c[0].a+" holds #1 with “"+c[0].t+"”");
+ c.slice(0,50).forEach((x,i)=>{if(x.me&&(!S.peak||i+1<S.peak)){S.peak=i+1;S.news.unshift(S.name+" reaches #"+(i+1)+" with “"+x.t+"”")}});
+ S.news=S.news.slice(0,8);S.fb+=rnd(0,2);chk();toast("Week "+(S.wk+1)+": earned $"+fmt(inc))}
+/* ---------- actions ---------- */
+const A={
+ tab:p=>{U.tab=p;U.app=null},app:p=>{U.app=p;U.mail=null},close:()=>{U.app=null;U.mail=null},next,genre:p=>U.g=p,
+ write(){if(!spend(0,20))return;S.songs.push({t:pick(W1)+" "+pick(W2),g:U.g,q:S.skill+rnd(0,15),st:0,age:0,wk:0,tot:0});toast("Song written")},
+ rec(i){const s=S.songs[i];if(!spend(100,25))return;s.q+=rnd(8,18);s.st=1;S.skill++;toast("Recorded")},
+ rel(i){const s=S.songs[i];if(!spend(50,5))return;s.st=2;chk();toast("Released “"+s.t+"”")},
+ show(){if(!spend(0,30))return;const m=Math.round(tf()*.5+rnd(50,150)),k=pick(PL)[0];S.money+=m;S.f[k]+=rnd(2,10);S.reg[pick(REG)]+=2;toast("Show paid $"+m);chk()},
+ post(p){const x=PL.find(a=>a[0]===p),cost={yt:20,ig:10,x:5,tt:15}[p];if(!spend(0,cost))return;const g=rnd(1,8)+Math.floor(tf()*.03)+S.buzz*2;S.f[p]+=g;toast("+"+g+" "+x[2]);chk()},
+ buy(i){const d=[[100,2],[300,7],[800,20]][i];if(!spend(d[0],0))return;S.buzz+=d[1];toast("Campaign live")},
+ meet(i){const d=[["Local DJ",50,3],["Venue manager",120,6],["Radio host",250,12]][i];if(S.con.includes(d[0]))return;if(!spend(d[1],10))return;S.con.push(d[0]);S.buzz+=d[2];toast("Connected with "+d[0])},
+ pitch(p){if(!spend(0,15))return;const g=rnd(50,200)+Math.round(tf()*rnd(1,3));S.st[p]+=g;toast("+"+g+" streams")},
+ mail(p){U.mail=+p;const m=S.mail.find(x=>x.id===+p);if(m)m.read=1},inbox:()=>U.mail=null,
+ sign(){S.label="Nova Records";S.money+=2000;S.mail.find(m=>m.offer).offer=0;S.mail.find(m=>m.id===2).body="Welcome to Nova Records. Advance paid.";toast("Signed. +$2,000");chk()},
+ rename(){const n=prompt("Artist name",S.name);if(n)S.name=n.slice(0,24)},
+ reset(){if(confirm("Delete all progress?")){S=fresh();U.app=null;U.tab="home"}}
+};
+document.addEventListener("click",e=>{const t=e.target.closest("[data-a]");if(!t)return;A[t.dataset.a](t.dataset.p);render()});
+/* ---------- views ---------- */
+const AP=[["sd","Soundify","linear-gradient(#25d366,#1db954)","🎧"],["az","Amazone","linear-gradient(#2eb6f5,#0f4fb5)","🎚️"],["pm","Pear Music","linear-gradient(#ff5a7a,#e63a5c)","🍐"],["promo","Streaming","linear-gradient(#23c9b1,#0f8f86)","📣"],["fb","Fakebook","linear-gradient(#1b7bff,#0b49d6)","f"],["gg","Goggle","#fff","🔍"],["mail","Mail","linear-gradient(#3aa0ff,#1565e6)","✉️"],["set","Settings","linear-gradient(#a9a9b3,#6f6f7a)","⚙️"],["link","Linkup","linear-gradient(#10382f,#0a1f1b)","🔗"]];
+const DK=[["yt","YouTube","#ef1c1c","▶"],["ig","Instagram","linear-gradient(45deg,#f9a03f,#d6249f,#5b51d8)","📷"],["x","X","#fff","𝕏"],["tt","TikTok","#000","♪"]];
+const bdg=id=>id==="fb"?S.fb:id==="mail"?S.mail.filter(m=>!m.read).length:0;
+const icon=(a,l)=>`<button class="app" data-a="app" data-p="${a[0]}" aria-label="${a[1]}"><div class="ico" style="background:${a[2]};color:${a[2]==="#fff"?"#222":"#fff"}">${a[3]}${bdg(a[0])?`<span class="badge">${bdg(a[0])}</span>`:""}</div>${l?a[1]:""}</button>`;
+const stats=()=>`<div class="box stats">${PL.map(p=>`<div><i class="dot" style="background:${p[3]}"></i><b>${p[1]}</b><span>${fmt(S.f[p[0]])} ${p[2]}</span></div>`).join("")}</div>`;
+const btn=(a,l,p,c)=>`<button class="btn ${c||""}" data-a="${a}"${p!=null?` data-p="${p}"`:""}>${l}</button>`;
+function home(){return`<div class="box"><div class="row"><div><div class="big">${S.name}</div><span class="mut">${title()}${S.label?" · signed to "+S.label:" · independent"}</span></div><div style="font-size:42px">🎤</div></div><div class="mut">Best chart position: ${S.peak?"#"+S.peak:"none yet"} · Buzz ${S.buzz}</div></div>`+stats()+
+ `<div class="box"><h3>Goals</h3>${GO.map((g,i)=>`<div class="row"><span style="${S.gd[i]?"color:var(--grn)":""}">${S.gd[i]?"✓ ":""}${g[0]}</span><span class="mut">$${fmt(g[2])}</span></div>`).join("")}</div>`+
+ `<div class="box"><h3>Chattr news</h3>${S.news.map(n=>`<div class="row mut">${n}</div>`).join("")}</div>`+btn("next","Next week","","wide")}
+function studio(){return`<div class="box"><h3>Write a song</h3>${GEN.map(g=>`<button class="chip ${U.g===g?"on":""}" data-a="genre" data-p="${g}">${g}</button>`).join("")}<div class="row"><span class="mut">20 energy</span>${btn("write","Write song")}</div></div>`+
+ (S.songs.length?S.songs.map((s,i)=>`<div class="box"><div class="row"><div><h3>${s.t}</h3><span class="mut">${s.g} · quality ${s.q}${s.st==2?" · "+fmt(s.tot)+" streams":""}</span></div>${s.st==0?btn("rec","Record $100",i,"sm"):s.st==1?btn("rel","Release $50",i,"sm"):`<span class="mut">Week ${s.age}</span>`}</div></div>`).join(""):`<div class="box mut">No songs yet. Write one, record it, then release it.</div>`)}
+function charts(){const c=chart().slice(0,30);return`<div class="box"><h3>Global Hot 50</h3><div class="mut">Weekly streams. Your best: ${S.peak?"#"+S.peak:"not charted"}</div></div><div class="box">${c.map((x,i)=>`<div class="ch ${x.me?"me":""}"><i>${i+1}</i><div><b>${x.t}</b><small>${x.a}</small></div><span class="mut">${fmt(x.s)}</span></div>`).join("")}</div>`}
+function social(){return stats()+`<div class="grid">${AP.map(a=>icon(a,1)).join("")}</div><div class="dock">${DK.map(a=>icon(a,0)).join("")}</div>`}
+function career(){const col=v=>v>=60?"var(--grn)":v>=30?"var(--gold)":"var(--red)";
+ return`<div class="box"><h3>Regional popularity</h3><div class="tiles">${REG.map(r=>`<div class="tile"><b style="color:${col(S.reg[r])}">${S.reg[r]}%</b><small>${r}</small></div>`).join("")}</div></div>`+
+ `<div class="box"><h3>Play a live show</h3><p class="mut">Earn cash and gain followers. Costs 30 energy.</p><div class="row"><span>Payout grows with fans</span>${btn("show","Perform")}</div></div>`+
+ `<div class="box"><h3>Label</h3><p class="mut">${S.label?"Signed to "+S.label+": 1.5x streams, 50% royalties.":"Independent. Reach 300 followers to get an offer in Mail."}</p></div>`+
+ `<div class="box"><h3>Totals</h3><p class="mut">Streams ${fmt(ts())} · Followers ${fmt(tf())} · Songs ${S.songs.length}</p></div>`}
+function sheet(){const a=AP.find(x=>x[0]===U.app)||DK.find(x=>x[0]===U.app),id=U.app;
+ const hd=`<div class="top"><button class="bk" data-a="close" aria-label="Back">‹</button><div class="ico" style="background:${a[2]};color:${a[2]==="#fff"?"#222":"#fff"}">${a[3]}</div><h2>${a[1]}</h2></div>`;let b="";
+ if(["sd","az","pm"].includes(id)){const r={sd:.004,az:.005,pm:.007}[id];b=`<div class="box"><div class="mut">Total streams</div><div class="big">${fmt(S.st[id])}</div><div class="mut">Pays $${r} per stream</div></div><div class="box"><h3>Pitch to a playlist</h3><div class="row"><span class="mut">15 energy</span>${btn("pitch","Pitch",id)}</div></div>`}
+ else if(id==="promo")b=`<div class="box"><div class="mut">Buzz boosts every post and song</div><div class="big">${S.buzz} buzz</div></div>`+[["Small ad push",100,"+2"],["Radio spot",300,"+7"],["Billboard campaign",800,"+20"]].map((d,i)=>`<div class="box row"><div><h3>${d[0]}</h3><span class="mut">${d[2]} buzz</span></div>${btn("buy","$"+d[1],i)}</div>`).join("");
+ else if(id==="fb"){S.fb=0;b=`<div class="box"><h3>Fakebook feed</h3>${S.news.map(n=>`<div class="row mut">${n}</div>`).join("")}</div>`}
+ else if(id==="gg")b=`<div class="box"><h3>Search: ${S.name}</h3></div><div class="box"><h3>${S.name} | Official</h3><p class="mut">${fmt(tf())} followers. ${title()}.</p></div>`;
+ else if(id==="mail"){const m=S.mail.find(x=>x.id===U.mail);b=m?`<div class="box"><div class="mut">From ${m.from}</div><h3>${m.subj}</h3><p>${m.body}</p></div>${m.offer?btn("sign","Accept offer"):""} ${btn("inbox","Back to inbox","","alt")}`:S.mail.map(x=>`<div class="box ${x.read?"":"unread"}" data-a="mail" data-p="${x.id}" style="cursor:pointer"><h3>${x.subj}</h3><span class="mut">${x.from}</span></div>`).join("")}
+ else if(id==="link")b=`<div class="box mut">Meet people who help your career. 10 energy each.</div>`+[["Local DJ",50,"+3"],["Venue manager",120,"+6"],["Radio host",250,"+12"]].map((d,i)=>`<div class="box row"><div><h3>${d[0]}</h3><span class="mut">${S.con.includes(d[0])?"Connected":d[2]+" buzz"}</span></div>${S.con.includes(d[0])?"":btn("meet","$"+d[1],i)}</div>`).join("");
+ else if(id==="set")b=`<div class="box row"><span>Artist name: ${S.name}</span>${btn("rename","Change","","alt sm")}</div><div class="box row"><span>Delete all progress</span>${btn("reset","Reset","","alt sm")}</div>`;
+ else{const c={yt:20,ig:10,x:5,tt:15}[id],p=PL.find(x=>x[0]===id);b=`<div class="box"><div class="mut">${p[1]}</div><div class="big">${fmt(S.f[id])}</div><div class="mut">${p[2]}</div></div><div class="box row"><span class="mut">${c} energy</span>${btn("post","Post",id)}</div>`}
+ return`<div class="sheet">${hd}${b}</div>`}
+const TABS=[["home","Home","📱",home],["studio","Studio","🎛️",studio],["charts","Charts","📈",charts],["career","Career","⭐",career],["goals","Goals","🏆",goals]];
+function render(){chk();
+ $("d").textContent="Week "+(S.wk+1);$("t").textContent=new Date(2026,0,5+S.wk*7).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+ $("m").textContent="$"+fmt(S.money);$("e").textContent="Energy "+S.energy;
+ $("nav").innerHTML=TABS.map(t=>`<button class="${U.tab===t[0]?"on":""}" data-a="tab" data-p="${t[0]}"><span>${t[2]}</span>${t[1]}</button>`).join("");
+ const keep=$("main").scrollTop;$("main").innerHTML=TABS.find(t=>t[0]===U.tab)[3]()+(U.app?sheet():"");$("main").scrollTop=keep;
+ try{localStorage.setItem("pe_save",JSON.stringify(S))}catch(e){}}
+const EM={Pop:"🎤","Hip-Hop":"🎧",Rock:"🎸","R&B":"🎹",Indie:"🌙"};
+function cov(t,g,z){let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))%360;return`<div class="cov" style="background:linear-gradient(135deg,hsl(${h},70%,52%),hsl(${(h+60)%360},70%,28%));${z?`width:${z}px;height:${z}px;font-size:${z/2}px`:""}">${EM[g]||"🎵"}</div>`}
+const TI=[["studio","Studio","linear-gradient(#a855f7,#6d28d9)","🎛️"],["charts","Charts","linear-gradient(#f5c542,#e08a00)","📈"],["career","Career","linear-gradient(#fb7185,#e11d48)","⭐"],["goals","Goals","linear-gradient(#34d399,#059669)","🏆"]];
+function home(){return stats()+`<div class="grid">${TI.map(a=>icon(a,1).replace('data-a="app"','data-a="tab"')).join("")}${AP.map(a=>icon(a,1)).join("")}</div><div class="dock">${DK.map(a=>icon(a,0)).join("")}</div><div style="height:14px"></div>`+btn("next","Next week","","wide")}
+function studio(){return`<div class="box"><h3>New song</h3>${GEN.map(g=>`<button class="chip ${U.g===g?"on":""}" data-a="genre" data-p="${g}">${EM[g]} ${g}</button>`).join("")}<div class="row"><span class="mut">20 energy</span>${btn("write","Write song")}</div></div>`+(S.songs.length?S.songs.map((s,i)=>`<div class="box"><div class="row" style="padding:0">${cov(s.t,s.g)}<div style="flex:1"><h3 style="margin:0">${s.t}</h3><span class="mut">${s.g} · quality ${s.q}</span></div>${s.st==0?btn("rec","Record $100",i,"sm"):s.st==1?btn("rel","Release $50",i,"sm"):""}</div><div class="steps">${[0,1,2].map(k=>`<i class="${s.st>=k?"on":""}"></i>`).join("")}</div><div class="lab"><span>Written</span><span>Recorded</span><span>Released</span></div>${s.st==2?`<div class="mut" style="margin-top:8px">${fmt(s.tot)} streams · ${fmt(s.wk)} this week</div>`:""}</div>`).join(""):`<div class="box mut">No songs yet. Pick a genre and write your first one.</div>`)}
+function charts(){const c=chart().slice(0,30);return`<div class="box"><div class="row" style="padding:0"><div><h3 style="margin:0">Global Hot 50</h3><span class="mut">Weekly streams</span></div><div class="big" style="color:var(--gold)">${S.peak?"#"+S.peak:"–"}</div></div></div><div class="box">${c.map((x,i)=>`<div class="ch ${x.me?"me":""}"><i style="${i<3?"color:var(--gold)":""}">${i+1}</i>${cov(x.t,"",44)}<div><b>${x.t}</b><small>${x.a}</small></div><span class="mut">${fmt(x.s)}</span></div>`).join("")}</div>`}
+function career(){const col=v=>v>=60?"var(--grn)":v>=30?"var(--gold)":"var(--red)";return`<div class="box"><h3>Regional popularity</h3><div class="tiles">${REG.map(r=>`<div class="tile"><b style="color:${col(S.reg[r])}">${S.reg[r]}%</b><small>${r}</small><div class="bar"><u style="width:${S.reg[r]}%;background:${col(S.reg[r])}"></u></div></div>`).join("")}</div></div><div class="box"><div class="row" style="padding:0"><div class="cov" style="background:linear-gradient(135deg,#fb7185,#9f1239)">🎪</div><div style="flex:1"><h3 style="margin:0">Live show</h3><span class="mut">30 energy · cash and followers</span></div>${btn("show","Perform")}</div></div><div class="box"><div class="row" style="padding:0"><div class="cov" style="background:linear-gradient(135deg,#f5c542,#a16207)">💿</div><div style="flex:1"><h3 style="margin:0">${S.label||"Independent"}</h3><span class="mut">${S.label?"1.5x streams, 50% royalties":"Reach 300 followers for an offer in Mail"}</span></div></div></div><div class="box"><h3>Totals</h3><p class="mut">${title()} · ${fmt(ts())} streams · ${fmt(tf())} followers · ${S.songs.length} songs</p></div>`}
+function goals(){const d=Object.keys(S.gd).length;return`<div class="box"><div class="row" style="padding:0"><h3 style="margin:0">Goals</h3><span class="mut">${d}/${GO.length} done</span></div><div class="bar"><u style="width:${d/GO.length*100}%;background:var(--grn)"></u></div></div>`+GO.map((g,i)=>`<div class="box"><div class="row" style="padding:0"><div class="cov" style="width:40px;height:40px;font-size:20px;background:${S.gd[i]?"var(--grn)":"#ffffff26"}">${S.gd[i]?"✓":"🎯"}</div><div style="flex:1"><b>${g[0]}</b></div><span style="color:var(--gold);font-weight:700">$${fmt(g[2])}</span></div></div>`).join("")+`<div class="box"><h3>Chattr news</h3>${S.news.map(n=>`<div class="row mut">${n}</div>`).join("")}</div>`}
+render();
+</script></body></html>
