@@ -1,6 +1,9 @@
 import React from 'react';
-import { Award, Disc3, Mic2, TrendingDown, TrendingUp, Users } from 'lucide-react';
-import { ASSETS, GENRES, LIFESTYLE_TIERS, STUDIO_TIERS } from '../data/worldData';
+import {
+  ArrowUpRight, Award, CalendarDays, Disc3, Flame, Headphones,
+  Mic2, Music2, Radio, TrendingUp, Users, Wallet, Zap
+} from 'lucide-react';
+import { ASSETS, LIFESTYLE_TIERS, STUDIO_TIERS } from '../data/worldData';
 import { GameState, NavTab } from '../types/game';
 import { formatCash, formatCompact } from '../utils/format';
 
@@ -10,297 +13,82 @@ interface OverviewDeckProps {
 }
 
 export const OverviewDeck: React.FC<OverviewDeckProps> = ({ state, onNavigate }) => {
-  const { artist, lastDigest, hotChart, tracks, albums } = state;
+  const { artist, lastDigest, hotChart, tracks, albums, socialFeed } = state;
   const portrait = ASSETS.portraits.find((p) => p.id === artist.portraitId) ?? ASSETS.portraits[0];
   const studio = STUDIO_TIERS[artist.studioLevel] ?? STUDIO_TIERS[0];
   const lifestyle = LIFESTYLE_TIERS[artist.lifestyleLevel] ?? LIFESTYLE_TIERS[0];
-
   const playerTracks = tracks.filter((t) => t.artistId === 'player');
-  const unreleasedTracks = playerTracks.filter((t) => !t.released);
-  const activeChartTracks = hotChart.filter((c) => c.artistId === 'player');
-  const releasedAlbums = albums.filter((a) => a.artistId === 'player' && a.released);
+  const unreleased = playerTracks.filter((t) => !t.released);
+  const activeChart = hotChart.filter((c) => c.artistId === 'player').slice(0, 3);
+  const latestTrack = [...playerTracks].reverse()[0];
+  const latestPost = socialFeed[0];
+  const weekInYear = ((state.week - 1) % 52) + 1;
+  const nextMove = unreleased.length ? 'Finish and release your next record' : playerTracks.length ? 'Build hype for your next single' : 'Record your debut single';
 
   return (
-    <div className="space-y-6">
-      {/* Artist Banner & Career Pulse */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        <div className="lg:col-span-7 rounded-lg border border-white/10 bg-[#13161D] p-5 flex flex-col sm:flex-row gap-5">
-          <img
-            src={portrait.src}
-            alt={artist.name}
-            referrerPolicy="no-referrer"
-            className="h-32 w-32 sm:h-40 sm:w-40 rounded-md object-cover border border-white/10 shrink-0"
-          />
-          <div className="flex-1 min-w-0 flex flex-col justify-between gap-4">
-            <div>
-              <p className="text-xs text-[#E5A93C] font-medium">
-                {artist.archetype} · {artist.city}
-              </p>
-              <h2 className="mt-1 text-2xl font-bold text-white truncate">{artist.name}</h2>
-              <p className="mt-1 text-xs text-neutral-400">
-                Label: <span className="text-neutral-200">{artist.labelContract ? artist.labelContract.labelName : 'Independent (100% Masters)'}</span>
-                <span className="mx-2" aria-hidden="true">·</span>
-                Studio: <span className="text-neutral-200">{studio.name}</span>
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-white/10 pt-3.5 tabular-nums">
-              <div>
-                <span className="block text-[11px] text-neutral-400">Total Streams</span>
-                <span className="font-mono-tabular text-sm font-semibold text-white">
-                  {formatCompact(artist.totalStreams)}
-                </span>
-              </div>
-              <div>
-                <span className="block text-[11px] text-neutral-400">Followers</span>
-                <span className="font-mono-tabular text-sm font-semibold text-white">
-                  {formatCompact(artist.followers)}
-                </span>
-              </div>
-              <div>
-                <span className="block text-[11px] text-neutral-400">Best Chart Peak</span>
-                <span className="font-mono-tabular text-sm font-semibold text-[#E5A93C]">
-                  {artist.peakChartPosition ? `#${artist.peakChartPosition}` : 'Uncharted'}
-                </span>
-              </div>
-              <div>
-                <span className="block text-[11px] text-neutral-400">#1 Hits</span>
-                <span className="font-mono-tabular text-sm font-semibold text-white">
-                  {artist.numberOneHits}
-                </span>
-              </div>
-            </div>
+    <div className="career-home space-y-5 sm:space-y-6">
+      <section className="career-hero">
+        <img src={portrait.src} alt="" className="career-hero__image" referrerPolicy="no-referrer" />
+        <div className="career-hero__shade" />
+        <div className="career-hero__content">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="career-eyebrow"><span className="career-live-dot" /> ARTIST CAREER</span>
+            <span className="career-season">YEAR {state.year} · WEEK {weekInYear}</span>
+          </div>
+          <p className="mt-4 text-sm font-semibold text-amber-200">{artist.city} · {artist.genre}</p>
+          <h1 className="career-artist-name">{artist.name}</h1>
+          <p className="career-artist-subtitle">{artist.archetype} <span>•</span> {artist.labelContract ? artist.labelContract.labelName : 'Independent artist'}</p>
+          <div className="career-hero__actions">
+            <button className="career-primary-action" onClick={() => onNavigate('studio')}><Mic2 size={17}/> Open the studio <ArrowUpRight size={16}/></button>
+            <button className="career-secondary-action" onClick={() => onNavigate('social')}><Radio size={16}/> Make some noise</button>
           </div>
         </div>
-
-        {/* Right: Quick Studio & Career Actions */}
-        <div className="lg:col-span-5 rounded-lg border border-white/10 bg-[#13161D] p-5 flex flex-col justify-between gap-4">
-          <div>
-            <h3 className="text-sm font-semibold text-white">Weekly Session Plan</h3>
-            <p className="mt-1 text-xs text-neutral-400">
-              You have <span className="font-mono-tabular font-semibold text-[#E5A93C]">{artist.energy} Energy AP</span> remaining this week ({lifestyle.name}).
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5">
-            <button
-              type="button"
-              onClick={() => onNavigate('studio')}
-              className="flex items-center gap-2.5 rounded-md border border-white/10 bg-[#0B0D11] px-3.5 py-3 text-left text-xs font-medium text-neutral-200 transition-colors hover:border-[#E5A93C]/60 hover:text-white"
-            >
-              <Mic2 className="h-4 w-4 text-[#E5A93C] shrink-0" />
-              <span className="truncate">Record Track</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigate('charts')}
-              className="flex items-center gap-2.5 rounded-md border border-white/10 bg-[#0B0D11] px-3.5 py-3 text-left text-xs font-medium text-neutral-200 transition-colors hover:border-[#E5A93C]/60 hover:text-white"
-            >
-              <Disc3 className="h-4 w-4 text-[#E5A93C] shrink-0" />
-              <span className="truncate">Global Hot 50</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigate('social')}
-              className="flex items-center gap-2.5 rounded-md border border-white/10 bg-[#0B0D11] px-3.5 py-3 text-left text-xs font-medium text-neutral-200 transition-colors hover:border-[#E5A93C]/60 hover:text-white"
-            >
-              <Users className="h-4 w-4 text-[#E5A93C] shrink-0" />
-              <span className="truncate">Promo & Feuds</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigate('business')}
-              className="flex items-center gap-2.5 rounded-md border border-white/10 bg-[#0B0D11] px-3.5 py-3 text-left text-xs font-medium text-neutral-200 transition-colors hover:border-[#E5A93C]/60 hover:text-white"
-            >
-              <Award className="h-4 w-4 text-[#E5A93C] shrink-0" />
-              <span className="truncate">Skills & Labels</span>
-            </button>
-          </div>
+        <div className="career-hero__rank">
+          <span>CAREER PEAK</span>
+          <strong>{artist.peakChartPosition ? `#${artist.peakChartPosition}` : '—'}</strong>
+          <small>Global Hot 50</small>
         </div>
-      </div>
+      </section>
 
-      {/* Weekly Financial & Chart Digest + Market Genre Pulse */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 rounded-lg border border-white/10 bg-[#13161D] p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 className="text-base font-semibold text-white">
-              {lastDigest ? `Week ${lastDigest.week} Performance Digest` : 'Debut Week Briefing'}
-            </h3>
-            {lastDigest && (
-              <span
-                className={`font-mono-tabular text-xs font-semibold ${
-                  lastDigest.netCashDelta >= 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'
-                }`}
-              >
-                Net {lastDigest.netCashDelta >= 0 ? '+' : ''}{formatCash(lastDigest.netCashDelta)}
-              </span>
-            )}
+      <section className="career-stat-strip" aria-label="Career stats">
+        <div className="career-stat"><span className="career-stat__icon"><Wallet size={17}/></span><div><small>Cash</small><strong className={artist.cash < 0 ? 'text-red-300' : ''}>{formatCash(artist.cash)}</strong></div></div>
+        <div className="career-stat"><span className="career-stat__icon"><Headphones size={17}/></span><div><small>Monthly listeners</small><strong>{formatCompact(artist.monthlyListeners)}</strong></div></div>
+        <div className="career-stat"><span className="career-stat__icon"><Users size={17}/></span><div><small>Followers</small><strong>{formatCompact(artist.followers)}</strong></div></div>
+        <div className="career-stat"><span className="career-stat__icon"><Flame size={17}/></span><div><small>Hype</small><strong>{artist.hype}<em>/100</em></strong></div></div>
+      </section>
+
+      <section className="career-home-grid">
+        <div className="career-panel career-next-move">
+          <div className="career-panel__heading"><div><span className="career-section-kicker">YOUR CAREER</span><h2>What’s next?</h2></div><span className="career-week-badge">W{weekInYear}</span></div>
+          <p className="career-next-move__lead">{nextMove}</p>
+          <p className="career-muted-copy">{unreleased.length ? `You have ${unreleased.length} master${unreleased.length === 1 ? '' : 's'} in your vault waiting for the right moment.` : 'Make a move this week. Every session, release and connection can change your trajectory.'}</p>
+          <div className="career-action-list">
+            <button onClick={() => onNavigate('studio')}><span className="career-action-icon"><Mic2 size={18}/></span><span><strong>Recording studio</strong><small>Create, mix and release music</small></span><ArrowUpRight size={17}/></button>
+            <button onClick={() => onNavigate('tour')}><span className="career-action-icon"><CalendarDays size={18}/></span><span><strong>Book a show</strong><small>Take your music to the stage</small></span><ArrowUpRight size={17}/></button>
+            <button onClick={() => onNavigate('business')}><span className="career-action-icon"><Award size={18}/></span><span><strong>Build your team</strong><small>Labels, crew and career upgrades</small></span><ArrowUpRight size={17}/></button>
           </div>
-
-          {lastDigest ? (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 tabular-nums">
-                <div>
-                  <span className="block text-[11px] text-neutral-400">Weekly Streams</span>
-                  <span className="font-mono-tabular text-sm font-semibold text-white">
-                    {formatCompact(lastDigest.streamsEarned)}
-                  </span>
-                </div>
-                <div>
-                  <span className="block text-[11px] text-neutral-400">Royalties</span>
-                  <span className="font-mono-tabular text-sm font-semibold text-[#22C55E]">
-                    +{formatCash(lastDigest.royaltiesEarned)}
-                  </span>
-                </div>
-                <div>
-                  <span className="block text-[11px] text-neutral-400">Tour & Merch</span>
-                  <span className="font-mono-tabular text-sm font-semibold text-[#22C55E]">
-                    +{formatCash(lastDigest.tourEarned + lastDigest.merchEarned)}
-                  </span>
-                </div>
-                <div>
-                  <span className="block text-[11px] text-neutral-400">Upkeep Paid</span>
-                  <span className="font-mono-tabular text-sm font-semibold text-neutral-300">
-                    -{formatCash(lastDigest.upkeepPaid)}
-                  </span>
-                </div>
-              </div>
-
-              {lastDigest.highlights.length > 0 && (
-                <div className="border-t border-white/10 pt-3 space-y-1.5">
-                  {lastDigest.highlights.map((h, i) => (
-                    <p key={i} className="text-xs text-neutral-200 flex items-center gap-2">
-                      <span className="text-[#E5A93C] font-bold">·</span>
-                      <span>{h}</span>
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-neutral-400 leading-relaxed">
-              Step into the <button type="button" onClick={() => onNavigate('studio')} className="text-[#E5A93C] underline underline-offset-4 hover:text-[#FDE68A]">Recording Studio</button> to cut your debut single, dial in the mixing console for a quality bonus, and release it before advancing your first week.
-            </p>
-          )}
+          <div className="career-energy"><span><Zap size={15}/> Weekly energy</span><div className="career-energy__bars">{Array.from({length: artist.maxEnergy}, (_, i) => <i key={i} className={i < artist.energy ? 'is-filled' : ''}/>)}</div><strong>{artist.energy}/{artist.maxEnergy}</strong></div>
         </div>
 
-        {/* Genre Market Momentum */}
-        <div className="lg:col-span-5 rounded-lg border border-white/10 bg-[#13161D] p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 className="text-base font-semibold text-white">Market Sound Demand</h3>
-            <span className="text-xs text-neutral-400">Live Listener Appetite</span>
-          </div>
-
-          <div className="space-y-3">
-            {GENRES.map((g) => {
-              const mult = state.genreTrends[g] ?? 1.0;
-              const pct = Math.round(mult * 100);
-              const hot = mult >= 1.08;
-              const cool = mult < 0.96;
-              return (
-                <div key={g} className="flex items-center justify-between gap-3 text-xs">
-                  <div className="flex items-center gap-2 min-w-[100px]">
-                    <span className={`font-medium ${g === artist.genre ? 'text-[#E5A93C]' : 'text-neutral-200'}`}>
-                      {g}
-                    </span>
-                    {g === artist.genre && <span className="text-[11px] text-neutral-400">(Yours)</span>}
-                  </div>
-                  <div className="flex-1 h-1.5 rounded-full bg-[#0B0D11] overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${hot ? 'bg-[#22C55E]' : cool ? 'bg-neutral-500' : 'bg-[#E5A93C]'}`}
-                      style={{ width: `${Math.min(100, Math.round(((mult - 0.7) / 0.7) * 100))}%` }}
-                    />
-                  </div>
-                  <div className="flex items-center gap-1 font-mono-tabular w-16 justify-end">
-                    {hot ? (
-                      <TrendingUp className="h-3.5 w-3.5 text-[#22C55E]" />
-                    ) : cool ? (
-                      <TrendingDown className="h-3.5 w-3.5 text-neutral-400" />
-                    ) : null}
-                    <span className={hot ? 'text-[#22C55E]' : 'text-neutral-300'}>{pct}%</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        <div className="career-panel career-spotlight">
+          <div className="career-panel__heading"><div><span className="career-section-kicker">THE SPOTLIGHT</span><h2>Your music</h2></div><button className="career-text-link" onClick={() => onNavigate('charts')}>Charts <ArrowUpRight size={14}/></button></div>
+          {activeChart.length ? <div className="career-chart-list">{activeChart.map((entry) => <div className="career-chart-row" key={entry.trackId}><span className="career-chart-rank">#{entry.rank}</span><div className="career-chart-cover"><Disc3 size={20}/></div><div className="career-chart-info"><strong>{entry.title}</strong><small>{formatCompact(entry.weeklyStreams)} streams this week</small></div><TrendingUp size={16} className="text-emerald-300"/></div>)}</div> : <div className="career-empty-music"><div className="career-vinyl"><Disc3 size={30}/></div><strong>Your first hit is waiting.</strong><p>Record a track, find your sound and release it to the world.</p><button onClick={() => onNavigate('studio')}>Make your first record <ArrowUpRight size={15}/></button></div>}
+          <div className="career-mini-summary"><div><small>In your vault</small><strong>{unreleased.length} <em>unreleased</em></strong></div><div><small>Number-one hits</small><strong>{artist.numberOneHits}</strong></div><div><small>Total streams</small><strong>{formatCompact(artist.totalStreams)}</strong></div></div>
         </div>
-      </div>
+      </section>
 
-      {/* Active Charting Tracks & Vault */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-lg border border-white/10 bg-[#13161D] p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-white">Your Active Hot 50 Records</h3>
-            <button
-              type="button"
-              onClick={() => onNavigate('charts')}
-              className="text-xs text-[#E5A93C] hover:underline"
-            >
-              View Full Chart
-            </button>
-          </div>
-          {activeChartTracks.length === 0 ? (
-            <p className="text-xs text-neutral-400 py-4">
-              None of your singles are currently inside the Global Hot 50. Build hype and release high-quality tracks to break in.
-            </p>
-          ) : (
-            <div className="divide-y divide-white/5">
-              {activeChartTracks.map((entry) => (
-                <div key={entry.trackId} className="py-2.5 flex items-center justify-between gap-3 text-xs">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="font-mono-tabular font-bold text-[#E5A93C] w-7">#{entry.rank}</span>
-                    <div className="min-w-0">
-                      <p className="font-medium text-white truncate">{entry.title}</p>
-                      <p className="text-[11px] text-neutral-400">
-                        Peak #{entry.peakPosition} · {entry.weeksOnChart}w on chart
-                      </p>
-                    </div>
-                  </div>
-                  <span className="font-mono-tabular text-neutral-200 shrink-0">
-                    {formatCompact(entry.weeklyStreams)}/wk
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+      <section className="career-home-grid career-home-grid--lower">
+        <div className="career-panel">
+          <div className="career-panel__heading"><div><span className="career-section-kicker">WEEKLY RECAP</span><h2>{lastDigest ? `Week ${lastDigest.week} in review` : 'Your story starts here'}</h2></div></div>
+          {lastDigest ? <><div className="career-recap-metrics"><div><small>Streams</small><strong>{formatCompact(lastDigest.streamsEarned)}</strong></div><div><small>Royalties</small><strong className="text-emerald-300">+{formatCash(lastDigest.royaltiesEarned)}</strong></div><div><small>Net income</small><strong className={lastDigest.netCashDelta >= 0 ? 'text-emerald-300' : 'text-red-300'}>{lastDigest.netCashDelta >= 0 ? '+' : ''}{formatCash(lastDigest.netCashDelta)}</strong></div></div>{lastDigest.highlights.slice(0, 2).map((h, i) => <p className="career-highlight" key={i}><span>✦</span>{h}</p>)}</> : <p className="career-muted-copy">Every artist starts somewhere. Record your debut, build your audience and let the industry notice.</p>}
         </div>
-
-        <div className="rounded-lg border border-white/10 bg-[#13161D] p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-white">Studio Vault & Releases</h3>
-            <span className="font-mono-tabular text-xs text-neutral-400">
-              {unreleasedTracks.length} unreleased · {releasedAlbums.length} projects
-            </span>
-          </div>
-          {playerTracks.length === 0 ? (
-            <p className="text-xs text-neutral-400 py-4">
-              No tracks recorded yet. Head to the Studio Desk to lay down your first demo.
-            </p>
-          ) : (
-            <div className="divide-y divide-white/5">
-              {playerTracks.slice(0, 4).map((trk) => (
-                <div key={trk.id} className="py-2.5 flex items-center justify-between gap-3 text-xs">
-                  <div className="min-w-0">
-                    <p className="font-medium text-white truncate">
-                      {trk.title}
-                      {trk.featuredArtistName ? ` (feat. ${trk.featuredArtistName})` : ''}
-                    </p>
-                    <p className="text-[11px] text-neutral-400">
-                      Quality {trk.quality}/100 · {trk.released ? `${formatCompact(trk.totalStreams)} streams` : 'Unreleased Master'}
-                    </p>
-                  </div>
-                  <span className={`text-[11px] font-medium shrink-0 ${trk.released ? 'text-[#22C55E]' : 'text-[#E5A93C]'}`}>
-                    {trk.released ? 'Live' : 'In Vault'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="career-panel career-world-panel">
+          <div className="career-panel__heading"><div><span className="career-section-kicker">BEHIND THE SCENES</span><h2>Industry pulse</h2></div><button className="career-text-link" onClick={() => onNavigate('industry')}>Explore <ArrowUpRight size={14}/></button></div>
+          <div className="career-world-line"><span className="career-world-icon"><Music2 size={17}/></span><div><strong>{latestTrack ? `“${latestTrack.title}”` : 'The debut era begins'}</strong><small>{latestTrack ? (latestTrack.released ? 'Your latest release is out in the world.' : 'A new master is waiting in the vault.') : 'Your first studio session could change everything.'}</small></div></div>
+          <div className="career-world-line"><span className="career-world-icon"><Users size={17}/></span><div><strong>{latestPost ? latestPost.authorName : 'The industry is moving'}</strong><small>{latestPost ? latestPost.content : 'Build relationships, find collaborators and watch your rivals.'}</small></div></div>
+          <div className="career-career-footer"><span><Headphones size={15}/> {studio.name}</span><span>{lifestyle.name}</span></div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
